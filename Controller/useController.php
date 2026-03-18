@@ -8,7 +8,9 @@ class useController
         throw new \Exception('Not implemented');
     }
 
-    public function login(): void {}
+    public function login(): void {
+        
+    }
 
     public function logout(): void {}
 
