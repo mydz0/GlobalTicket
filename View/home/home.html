@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Tickets</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="home.css">
+</head>
+
+<body>
+
+    <!-- ── HIDDEN CHECKBOX – CSS-only sidebar toggle ── -->
+    <input type="checkbox" id="sidebar-toggle">
+
+    <!-- Clicking overlay closes sidebar -->
+    <label class="sidebar-overlay" for="sidebar-toggle"></label>
+
+    <!-- ── SIDEBAR ── -->
+    <aside class="sidebar">
+        <div class="sidebar-top">
+            <label class="sidebar-close" for="sidebar-toggle" aria-label="Close menu">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                    <line x1="1" y1="1" x2="17" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    <line x1="17" y1="1" x2="1" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+            </label>
+            <button class="sidebar-search-btn" aria-label="Search">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                    <circle cx="7.5" cy="7.5" r="5.5" stroke="currentColor" stroke-width="2" />
+                    <line x1="11.5" y1="11.5" x2="17" y2="17" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" />
+                </svg>
+            </button>
+        </div>
+        <div class="sidebar-search-row">
+            <input class="sidebar-input" type="text" placeholder="">
+        </div>
+        <nav class="sidebar-nav">
+            <a href="../signIn/signin.html">Sign in</a>
+            <a href="../login/login.html">Log in</a>
+        </nav>
+    </aside>
+
+    <!-- ── HEADER ── -->
+    <header class="header">
+        <a href="#" class="logo">
+            <img src="logo.svg" alt="Global Tickets" class="logo-img">
+        </a>
+
+        <!-- Menu button – label toggles checkbox -->
+        <label class="menu-btn" for="sidebar-toggle" aria-label="Open menu">
+            <svg class="icon-hamburger" width="22" height="16" viewBox="0 0 22 16" fill="none">
+                <line x1="0" y1="1" x2="22" y2="1" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                <line x1="0" y1="8" x2="22" y2="8" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                <line x1="0" y1="15" x2="22" y2="15" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+        </label>
+    </header>
+
+    <!-- ── HERO ── -->
+    <section class="hero">
+        <img src="theMarias.jpg" alt="The Marias" class="hero-img">
+    </section>
+
+    <!-- ── MAIN GRID ── -->
+    <main class="container">
+        <div class="grid">
+
+            <a class="card" href="../event/event.html">
+                <img src="wte.jpg" alt="Wave to Earth">
+                <div class="card-info">
+                    <p class="card-desc">Lorem ipsum dolor sit amet</p>
+                    <h3>Wave to Earth</h3>
+                </div>
+            </a>
+
+            <a class="card" href="../event/event.html">
+                <img src="rusowsky.webp" alt="Schoolgirl byebye">
+                <div class="card-info">
+                    <p class="card-desc">Lorem ipsum dolor sit amet</p>
+                    <h3>Schoolgirl byebye</h3>
+                </div>
+            </a>
+
+            <!-- Tall ad – spans 3 rows -->
+            <div class="card ad-tall">
+                <img src="ad.jpg" alt="Ad">
+            </div>
+
+            <a class="card" href="../event/event.html">
+                <img src="frankOcean.jpg" alt="Frank Ocean">
+                <div class="card-info">
+                    <p class="card-desc">Lorem ipsum dolor sit amet</p>
+                    <h3>Frank Ocean</h3>
+                </div>
+            </a>
+
+            <a class="card" href="../event/event.html">
+                <img src="kaliUchis.webp" alt="Kali Uchis">
+                <div class="card-info">
+                    <p class="card-desc">Lorem ipsum dolor sit amet</p>
+                    <h3>Kali Uchis</h3>
+                </div>
+            </a>
+
+            <a class="card" href="../event/event.html">
+                <img src="pinkpantheress2.webp" alt="PinkPanthress">
+                <div class="card-info">
+                    <p class="card-desc">Lorem ipsum dolor sit amet</p>
+                    <h3>PinkPanthress</h3>
+                </div>
+            </a>
+
+            <a class="card" href="../event/event.html">
+                <img src="charliXCX.webp" alt="Charli XCX">
+                <div class="card-info">
+                    <p class="card-desc">Lorem ipsum dolor sit amet</p>
+                    <h3>Charli XCX</h3>
+                </div>
+            </a>
+
+            <!-- Bottom ad -->
+            <div class="card ad-bottom">
+                <img src="ad.jpg" alt="Ad">
+            </div>
+
+            <!-- Countdown -->
+            <div class="card countdown-card">
+                <h2 class="countdown-title">COUNTDOWN</h2>
+                <div class="timer" id="countdown">04:10:20</div>
+                <button class="reserve-btn">RESERVA AHORA</button>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- ── FOOTER ── -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-logo-wrap">
+                <img src="logo.svg" alt="Global Tickets" class="logo-img">
+            </div>
+
+            <div class="footer-col">
+                <h4>Instagram</h4>
+                <p>@globaltickets</p>
+                <h4>Email</h4>
+                <p>ticket@globaltickets</p>
+                <h4>Contact</h4>
+                <p>+30 111 111 111</p>
+            </div>
+            <div class="footer-col">
+                <h4>Instagram</h4>
+                <p>@globaltickets</p>
+                <h4>Email</h4>
+                <p>ticket@globaltickets</p>
+                <h4>Contact</h4>
+                <p>+30 111 111 111</p>
+            </div>
+            <div class="footer-col">
+                <h4>Instagram</h4>
+                <p>@globaltickets</p>
+                <h4>Email</h4>
+                <p>ticket@globaltickets</p>
+                <h4>Contact</h4>
+                <p>+30 111 111 111</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function updateCountdown() {
+            const el = document.getElementById('countdown');
+            let [h, m, s] = el.textContent.split(':').map(Number);
+            if (--s < 0) { s = 59; if (--m < 0) { m = 59; if (--h < 0) h = m = s = 0; } }
+            el.textContent = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+        }
+        setInterval(updateCountdown, 1000);
+    </script>
+</body>
+
+</html>

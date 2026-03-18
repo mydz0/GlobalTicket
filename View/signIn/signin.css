@@ -1,0 +1,105 @@
+/* ══════════════════════════════════════════
+   GLOBAL TICKETS — signin.css
+   ══════════════════════════════════════════ */
+
+/* ── HEADER override: grey background ── */
+.signin-header {
+    background: var(--grey-light);
+    border-bottom: none;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.header-arrows {
+    color: var(--black);
+    display: flex;
+    align-items: center;
+}
+
+/* ── MAIN ── */
+.signin-main {
+    min-height: calc(100vh - 68px - 160px);
+    padding-bottom: 80px;
+}
+
+.signin-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 36px 28px 0;
+}
+
+/* ── TITLE ── */
+.signin-title {
+    font-family: var(--font-body);
+    font-size: 34px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 60px;
+}
+
+/* ── OPTIONS GRID ── */
+.signin-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 40px 0;
+}
+
+/* ── SINGLE OPTION ── */
+.signin-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    text-decoration: none;
+    color: var(--black);
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.signin-option:hover {
+    opacity: 0.7;
+}
+
+.signin-icon {
+    width: 140px;
+    height: 140px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.signin-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.signin-label {
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--black);
+    text-align: center;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 560px) {
+    .signin-options {
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        padding: 20px 0;
+    }
+
+    .signin-icon {
+        width: 100px;
+        height: 100px;
+    }
+
+    .signin-title { font-size: 26px; }
+}

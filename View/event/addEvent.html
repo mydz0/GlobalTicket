@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Event — Global Tickets</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../home/home.css">
+    <link rel="stylesheet" href="addEvent.css">
+</head>
+
+<body>
+
+    <input type="checkbox" id="sidebar-toggle">
+    <label class="sidebar-overlay" for="sidebar-toggle"></label>
+
+    <aside class="sidebar">
+        <div class="sidebar-top">
+            <label class="sidebar-close" for="sidebar-toggle" aria-label="Close menu">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                    <line x1="1" y1="1" x2="17" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    <line x1="17" y1="1" x2="1" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+            </label>
+            <button class="sidebar-search-btn" aria-label="Search">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                    <circle cx="7.5" cy="7.5" r="5.5" stroke="currentColor" stroke-width="2" />
+                    <line x1="11.5" y1="11.5" x2="17" y2="17" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" />
+                </svg>
+            </button>
+        </div>
+        <div class="sidebar-search-row">
+            <input class="sidebar-input" type="text" placeholder="">
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#">Sign in</a>
+            <a href="#">Log in</a>
+        </nav>
+    </aside>
+
+    <header class="header">
+        <a href="../home/home.html" class="logo">
+            <img src="../home/logo.svg" alt="Global Tickets" class="logo-img">
+        </a>
+        <label class="menu-btn" for="sidebar-toggle" aria-label="Open menu">
+            <svg width="22" height="16" viewBox="0 0 22 16" fill="none">
+                <line x1="0" y1="1" x2="22" y2="1" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                <line x1="0" y1="8" x2="22" y2="8" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                <line x1="0" y1="15" x2="22" y2="15" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+        </label>
+    </header>
+
+    <main class="addevent-main">
+        <div class="addevent-container">
+
+            <h1 class="addevent-title">Add event</h1>
+
+            <form class="addevent-form" action="../event/event.html" method="get">
+
+                <div class="addevent-layout">
+
+                    <div class="addevent-fields">
+
+                        <div class="field-group">
+                            <label class="field-label" for="name">Name</label>
+                            <input class="field-input" type="text" id="name" name="name" required placeholder=" ">
+                            <span class="field-error">Please provide a name</span>
+                        </div>
+
+                        <div class="field-group">
+                            <label class="field-label" for="date">Date</label>
+                            <input class="field-input" type="text" id="date" name="date" required placeholder=" ">
+                            <span class="field-error">Please provide a date</span>
+                        </div>
+
+                        <div class="field-group">
+                            <label class="field-label" for="location">Location</label>
+                            <input class="field-input" type="text" id="location" name="location" required
+                                placeholder=" ">
+                            <span class="field-error">Please enter location</span>
+                        </div>
+
+                        <div class="field-group">
+                            <label class="field-label" for="description">Description</label>
+                            <textarea class="field-textarea" id="description" name="description" required minlength="70"
+                                maxlength="158" placeholder=" "></textarea>
+                            <span class="field-error">Description must have between 70 - 158 characters</span>
+                        </div>
+
+                    </div>
+
+                    <div class="addevent-photo">
+                        <label class="photo-upload" for="photo-input">
+                            <span class="photo-plus">+</span>
+                            <input type="file" id="photo-input" accept="image/*" hidden>
+                        </label>
+                        <p class="photo-label">Add photo</p>
+                    </div>
+
+                </div>
+
+                <a href="../home/home.html">
+                    <button type="button" class="save-btn">Save event</button>
+                </a>
+            </form>
+
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-logo-wrap">
+                <img src="../home/logo.svg" alt="Global Tickets" class="logo-img">
+            </div>
+            <div class="footer-col">
+                <h4>Instagram</h4>
+                <p>@globaltickets</p>
+                <h4>Email</h4>
+                <p>ticket@globaltickets</p>
+                <h4>Contact</h4>
+                <p>+30 111 111 111</p>
+            </div>
+            <div class="footer-col">
+                <h4>Instagram</h4>
+                <p>@globaltickets</p>
+                <h4>Email</h4>
+                <p>ticket@globaltickets</p>
+                <h4>Contact</h4>
+                <p>+30 111 111 111</p>
+            </div>
+            <div class="footer-col">
+                <h4>Instagram</h4>
+                <p>@globaltickets</p>
+                <h4>Email</h4>
+                <p>ticket@globaltickets</p>
+                <h4>Contact</h4>
+                <p>+30 111 111 111</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+</html>
