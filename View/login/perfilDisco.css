@@ -1,8 +1,8 @@
 /* ══════════════════════════════════════════
-   GLOBAL TICKETS — profile.css
+   GLOBAL TICKETS — profile-disco.css
    ══════════════════════════════════════════ */
 
-/* ── Hide all state inputs ── */
+/* ── Hide state inputs ── */
 #sidebar-toggle,
 #profile-sidebar-toggle {
     display: none;
@@ -14,7 +14,7 @@
     border-bottom: none;
 }
 
-/* ══ PROFILE OVERLAY (behind purple sidebar) ══ */
+/* ══ PROFILE OVERLAY ═══════════════════════════ */
 .profile-overlay {
     position: fixed;
     inset: 0;
@@ -31,7 +31,7 @@
     pointer-events: all;
 }
 
-/* ══ PROFILE SIDEBAR (purple, right) ══════════ */
+/* ══ PROFILE SIDEBAR (purple) ══════════════════ */
 .profile-sidebar {
     position: fixed;
     top: 0;
@@ -105,9 +105,7 @@
     font-weight: 500;
 }
 
-.profile-sidebar-nav a:hover {
-    text-decoration: underline;
-}
+.profile-sidebar-nav a:hover { text-decoration: underline; }
 
 /* ══ MAIN ══════════════════════════════════════ */
 .profile-main {
@@ -135,9 +133,9 @@
     display: flex;
     align-items: center;
     gap: 56px;
+    margin-bottom: 52px;
 }
 
-/* ── Avatar ── */
 .avatar-circle {
     width: 210px;
     height: 210px;
@@ -151,9 +149,7 @@
     transition: background 0.2s;
 }
 
-.avatar-circle:hover {
-    background: #c0c0c0;
-}
+.avatar-circle:hover { background: #c0c0c0; }
 
 .avatar-plus {
     font-size: 42px;
@@ -163,7 +159,6 @@
     font-weight: 300;
 }
 
-/* ── Info ── */
 .profile-info {
     display: flex;
     flex-direction: column;
@@ -184,7 +179,6 @@
     line-height: 1.6;
 }
 
-/* ── Edit button ── */
 .profile-edit-btn {
     display: inline-block;
     margin-top: 18px;
@@ -205,8 +199,78 @@
     color: var(--white);
 }
 
+/* ══ MY ARTISTS ════════════════════════════════ */
+.artists-section {
+    margin-top: 0;
+}
+
+/* Grey header bar with title + button */
+.artists-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--grey-light);
+    padding: 14px 18px;
+    margin-bottom: 24px;
+}
+
+.artists-title {
+    font-family: var(--font-body);
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.add-artist-btn {
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--black);
+    background: #bbb;
+    border: none;
+    padding: 9px 18px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+}
+
+.add-artist-btn:hover {
+    background: var(--black);
+    color: var(--white);
+}
+
+/* 3-column artist grid */
+.artists-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+.artist-card {
+    display: block;
+    text-decoration: none;
+    color: var(--black);
+}
+
+.artist-card img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    object-position: top center;
+    display: block;
+    transition: opacity 0.2s;
+}
+
+.artist-card:hover img { opacity: 0.85; }
+
+.artist-name {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 700;
+    margin-top: 10px;
+}
+
 /* ══ RESPONSIVE ════════════════════════════════ */
-@media (max-width: 600px) {
+@media (max-width: 700px) {
     .profile-title { font-size: 26px; }
 
     .profile-card {
@@ -220,8 +284,16 @@
         height: 150px;
     }
 
-    .profile-edit-btn {
-        width: 100%;
-        text-align: center;
+    .artists-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
     }
+
+    .artist-card img { height: 160px; }
+
+    .profile-edit-btn { width: 100%; text-align: center; }
+}
+
+@media (max-width: 420px) {
+    .artists-grid { grid-template-columns: 1fr; }
 }

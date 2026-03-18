@@ -7,8 +7,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/View/home/home.css">
-    <link rel="stylesheet" href="perfil.css">
+    <link rel="stylesheet" href="../home/home.css">
+    <link rel="stylesheet" href="perfilDisco.css">
 </head>
 <body>
 
@@ -16,11 +16,10 @@
     <input type="checkbox" id="sidebar-toggle">
     <input type="checkbox" id="profile-sidebar-toggle">
 
-    <!-- Overlays -->
     <label class="sidebar-overlay"  for="sidebar-toggle"></label>
     <label class="profile-overlay"  for="profile-sidebar-toggle"></label>
 
-    <!-- ── MAIN SIDEBAR (hamburger menu) ── -->
+    <!-- ── MAIN SIDEBAR ── -->
     <aside class="sidebar">
         <div class="sidebar-top">
             <label class="sidebar-close" for="sidebar-toggle" aria-label="Close">
@@ -45,7 +44,7 @@
         </nav>
     </aside>
 
-    <!-- ── PROFILE SIDEBAR (purple, slides from right) ── -->
+    <!-- ── PROFILE SIDEBAR (purple) ── -->
     <aside class="profile-sidebar">
         <div class="profile-sidebar-top">
             <label class="profile-sidebar-close" for="profile-sidebar-toggle" aria-label="Close">
@@ -90,6 +89,7 @@
 
             <h1 class="profile-title">Profile</h1>
 
+            <!-- Profile card -->
             <div class="profile-card">
                 <div class="avatar-circle">
                     <span class="avatar-plus">+</span>
@@ -99,9 +99,55 @@
                     <p>Lorem ipsum</p>
                     <p>Lorem ipsum jnaf</p>
                     <p>ujhbskjdbfjsbou</p>
-                    <a href="/View/login/editProfileUser.html" class="profile-edit-btn">Edit profile</a>
+                    <a href="/View/login/editProfileDisco.html" class="profile-edit-btn">Edit profile</a>
                 </div>
             </div>
+
+            <!-- My artists -->
+            <section class="artists-section">
+                <div class="artists-header">
+                    <h2 class="artists-title">My artists</h2>
+                    <a href="#" class="add-artist-btn">Add artist</a>
+                </div>
+                <div class="artists-grid">
+                    <a href="#" class="artist-card">
+                        <img src="addison.jpg" alt="Addison Rae">
+                        <p class="artist-name">Addison Rae</p>
+                    </a>
+                    <a href="#" class="artist-card">
+                        <img src="tyler.jpg" alt="Tyler, The Creator">
+                        <p class="artist-name">Tyler, The Creator</p>
+                    </a>
+                    <a href="#" class="artist-card">
+                        <img src="solange.jpg" alt="Solange">
+                        <p class="artist-name">Solange</p>
+                    </a>
+                    <a href="#" class="artist-card">
+                        <img src="jennie.jpg" alt="JENNIE">
+                        <p class="artist-name">JENNIE</p>
+                    </a>
+                    <a href="#" class="artist-card">
+                        <img src="ian.jpg" alt="ian">
+                        <p class="artist-name">ian</p>
+                    </a>
+                    <a href="#" class="artist-card">
+                        <img src="centralcee.jpg" alt="Central Cee">
+                        <p class="artist-name">Central Cee</p>
+                    </a>
+                    <a href="#" class="artist-card">
+                        <img src="tameimpala.jpg" alt="Tame Impala">
+                        <p class="artist-name">Tame Impala</p>
+                    </a>
+                    <a href="#" class="artist-card">
+                        <img src="ive.jpg" alt="IVE">
+                        <p class="artist-name">IVE</p>
+                    </a>
+                    <a href="#" class="artist-card">
+                        <img src="rosalia.jpg" alt="Rosalía">
+                        <p class="artist-name">Rosalía</p>
+                    </a>
+                </div>
+            </section>
 
         </div>
     </main>
