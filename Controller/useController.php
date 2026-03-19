@@ -1,6 +1,8 @@
 <?php
+
 class useController
 {
+
     /**yessamin
      * /
      * @var 
@@ -60,7 +62,9 @@ class useController
 }
     
 
-    public function login(): void {}
+    public function login(): void {
+
+    }
 
     public function logout(): void {}
 
