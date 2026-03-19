@@ -12,12 +12,14 @@ class useController
         throw new \Exception('Not implemented');
     }
 
-    public function register($datos, $archivos): ?string 
-    {
+    public function register($datos, $archivos):  void {
+    
         //para ver que las contraseñas coincidan
         if ($datos['password'] !== $datos['confirm-password']) {
-            return "Las contraseñas no coinciden.";
-        }
+        //ponemos el error por la ruta porque no deja poner return
+        header("Location: ../View/register/registerUser.php?error=password");
+        exit();
+    }
 
         //la foto: 
         if (isset($archivos['foto_perfil']) && $archivos['foto_perfil']['error'] === UPLOAD_ERR_OK) {
@@ -42,13 +44,21 @@ class useController
 
         //si todo esta bien (asumimos q si) pues te lo hace 
         if ($todoCorrecto) {
+
+                //tengo que poner la ruta
             header("Location: ../home/home.html"); 
-            exit();
+
+        exit();
         } else {
-            return "Error al procesar el registro.";
-        }
-    }    
-    }  
+
+            //el header es como un return: aqui tiene q ir la ruta
+            header("Location: ../View/register/registerUser.php?error=error_registro");
+
+        exit();
+    }
+  }
+}
+    
 
     public function login(): void {}
 
