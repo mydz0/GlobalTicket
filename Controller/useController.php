@@ -1,6 +1,10 @@
 <?php
 class useController
 {
+    /**yessamin
+     * /
+     * @var 
+     */
     private $connection;
 
     public function __construct()
