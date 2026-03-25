@@ -1,3 +1,23 @@
+<?php
+
+//con esto llamas al controlador para poder usarlo;
+require_once '.../../Controller/useController';
+
+//mensaje que sale para cuando las contraseñas no coinciden:
+error_msg = "";
+if (isset($_GET['error']) && $_GET['error'] === "password") {
+    $error_msg = "Password not match";
+}
+
+//cuando el usuario le da al boton (llamamos al metodo que pusimos):
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    //con esto creamos el objeto 
+    $controlador = new useController();
+    //usamos el metodo register que pusimos en la clase
+    $controlador->register($_POST, $FILES);
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
