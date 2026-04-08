@@ -4,7 +4,7 @@
 require_once '.../../Controller/useController';
 
 //mensaje que sale para cuando las contraseñas no coinciden:
-error_msg = "";
+$error_msg = "";
 if (isset($_GET['error']) && $_GET['error'] === "password") {
     $error_msg = "Password not match";
 }
