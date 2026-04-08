@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     //con esto creamos el objeto 
     $controlador = new useController();
     //usamos el metodo register que pusimos en la clase
-    $controlador->register($_POST, $FILES);
+    $controlador->register($datos, $archivos);
 }
 ?>
 
