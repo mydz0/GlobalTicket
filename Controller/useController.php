@@ -7,7 +7,7 @@ class useController
      * /
      * @var 
      */
-    private $connection;
+    private mysqli $connection;
 
     public function __construct()
     {
