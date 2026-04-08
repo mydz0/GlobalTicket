@@ -7,10 +7,14 @@ class useController
      * /
      * @var 
      */
+
+        // Atributo privado: conexión a la BD
     private mysqli $connection;
 
     public function __construct()
     {
+         // Obtenemos la conexión mysqli desde el Singleton de db.php
+        $this->connection = Database::getInstance()->getConexion();
     }
 
     public function register($datos, $archivos):  void {
