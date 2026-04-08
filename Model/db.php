@@ -8,7 +8,7 @@ class Database
     private string $host      = 'localhost';
     private string $usuario   = 'root';
     private string $password  = '';
-    private string $baseDatos = 'globaltickets2';
+    private string $baseDatos = 'globaltickets';
 
     // Objeto de conexión mysqli
     private mysqli $conexion;
