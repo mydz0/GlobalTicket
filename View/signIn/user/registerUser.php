@@ -1,7 +1,5 @@
 <?php
 
-//con esto llamas al controlador para poder usarlo;
-require_once '.../../Controller/useController';
 
 //mensaje que sale para cuando las contraseñas no coinciden:
 $error_msg = "";
