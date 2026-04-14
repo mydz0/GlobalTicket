@@ -86,6 +86,55 @@ class useController
         $stmt->close();
     }
 
+    public function registerDisco($datos, $archivos): void
+    {
+        if ($datos['password'] !== $datos['confirm-password']) {
+            header("Location: ../View/signIn/discography/discoSignIn.php?error=password");
+            exit();
+        }
+
+        if (!filter_var($datos['mail'], FILTER_VALIDATE_EMAIL)) {
+            header("Location: ../View/signIn/discography/discoSignIn.php?error=email");
+            exit();
+        }
+
+        $passwordHash = password_hash($datos['password'], PASSWORD_DEFAULT);
+
+        $foto = null;
+        if (isset($archivos['photo']) && $archivos['photo']['error'] === UPLOAD_ERR_OK) {
+            $directorioUploads = "../../uploads/";
+            if (!is_dir($directorioUploads)) mkdir($directorioUploads, 0777, true);
+            $fileName = time() . "_" . basename($archivos['photo']['name']);
+            $rutaFinal = $directorioUploads . $fileName;
+            if (move_uploaded_file($archivos['photo']['tmp_name'], $rutaFinal)) {
+                $foto = $fileName;
+            }
+        }
+
+        $stmt = $this->connection->prepare("INSERT INTO discographies (name, cif, mail, cellphone, adress, password, photo)
+         VALUES (?, ?, ?, ?, ?, ?, ?)");
+
+        $stmt->bind_param(
+            "sssssss",
+            $datos['name'],
+            $datos['cif'],
+            $datos['mail'],
+            $datos['cellphone'],
+            $datos['adress'],
+            $passwordHash,
+            $foto
+        );
+
+        if ($stmt->execute()) {
+            header("Location: ../../home/home.html");
+            exit();
+        } else {
+            header("Location: ../View/signIn/discography/discoSignIn.php?error=error_registro");
+            exit();
+        }
+        $stmt->close();
+    }
+
 
 
     //  REGISTER  (req. 4.4 — nombre exacto del diagrama UML)
