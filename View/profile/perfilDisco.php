@@ -6,6 +6,13 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: ../../View/login/login.php");
     exit();
 }
+
+//comprobación de rol
+if ($_SESSION['role'] !== 'disco') {
+    header("Location: ../../View/profile/perfilUser.php");
+    exit();
+}
+
 ?>
 
 <!DOCTYPE html>
