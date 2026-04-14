@@ -86,7 +86,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <h1 class="register-title">Create user account</h1>
 
-            <form class="register-form" action="../home/home.html" method="get">
+            <form class="register-form" action="" method="post" enctype="multipart/form-data">
+<!--enctype para subir foto del usuario-->
 
                 <div class="register-layout">
 
