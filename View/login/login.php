@@ -9,7 +9,7 @@ if (isset($_GET['error'])) {
     if ($_GET['error'] === 'error_login') $error_msg = "Logon error, try again";
 }
 
-if($_SERVER['REQUEST_METHOD'] === 'POST'){
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $controlador = new useController();
     $controlador->login($_POST);
 }
@@ -139,19 +139,24 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
             <div class="screen screen-user">
                 <h1 class="login-title">Log in user</h1>
                 <div class="form-block">
+                    <form method="post" action="">
 
-                    <span class="field-lbl">Username</span>
-                    <input class="field-input" type="text" autocomplete="off">
-                    <label class="field-error err-user-username" for="err-user-username">Username incorrect</label>
+                        <span class="field-lbl">Username</span>
+                        <input class="field-input" type="text" name="username" autocomplete="off">
+                        <label class="field-error err-user-username" for="err-user-username">Username incorrect</label>
 
-                    <span class="field-lbl">Password</span>
-                    <input class="field-input" type="password">
-                    <label class="field-error err-user-password" for="err-user-password">Password incorrect</label>
+                        <span class="field-lbl">Password</span>
+                        <input class="field-input" type="password" name="password">
+                        <label class="field-error err-user-password" for="err-user-password">Password incorrect</label>
 
-                    <label class="forgot-link" for="modal-user">Forgot password?</label>
-                    <a href="/View/login/perfilUser.html"
-                        <label class="btn-login" for="err-user-username">Log in</label></a>
+                        <label class="forgot-link" for="modal-user">Forgot password?</label>
+                        <input type="hidden" name="tipo" value="user">
+                        <?php if ($error_msg): ?>
+                            <p style="color:red;"><?= $error_msg ?></p>
+                        <?php endif; ?>
 
+                        <button class="btn-login" type="submit">Log in</button>
+                    </form>
                 </div>
 
                 <!-- Modal forgot password -->
@@ -176,18 +181,24 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
             <div class="screen screen-disco">
                 <h1 class="login-title">Log in discography</h1>
                 <div class="form-block">
+                    <form method="post" action="">
 
-                    <span class="field-lbl">CIF</span>
-                    <input class="field-input" type="text" autocomplete="off">
-                    <label class="field-error err-disco-username" for="err-disco-username">Username incorrect</label>
+                        <span class="field-lbl">CIF</span>
+                        <input class="field-input" type="text" name="cif" autocomplete="off">
+                        <label class="field-error err-disco-username" for="err-disco-username">Username incorrect</label>
 
-                    <span class="field-lbl">Password</span>
-                    <input class="field-input" type="password">
-                    <label class="field-error err-disco-password" for="err-disco-password">Password incorrect</label>
+                        <span class="field-lbl">Password</span>
+                        <input class="field-input" type="password" name="password">
+                        <label class="field-error err-disco-password" for="err-disco-password">Password incorrect</label>
 
-                    <label class="forgot-link" for="modal-disco">Forgot password?</label>
-                    <a href="../login/perfilDisco.html"
-                        <label class="btn-login" for="err-disco-username">Log in</label></a>
+                        <label class="forgot-link" for="modal-disco">Forgot password?</label>
+                        <input type="hidden" name="tipo" value="disco">
+                        <?php if ($error_msg): ?>
+                            <p style="color:red;"><?= $error_msg ?></p>
+                        <?php endif; ?>
+
+                        <button class="btn-login" type="submit">Log in</button>
+                    </form>
 
                 </div>
 
