@@ -145,7 +145,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="register-photo">
                         <label class="photo-upload-circle" for="photo-input">
                             <span class="photo-plus">+</span>
-                            <input type="file" id="photo-input" accept="image/*" hidden>
+                            <input type="file" id="photo-input" name= "photo" accept="image/*" hidden>
                         </label>
                         <p class="photo-label">Add photo</p>
                     </div>
