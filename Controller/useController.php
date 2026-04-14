@@ -1,4 +1,6 @@
 <?php
+//llamada a la base de datos
+require_once '../Model/db.php';
 
 class useController
 {
