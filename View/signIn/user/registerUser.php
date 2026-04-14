@@ -87,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <h1 class="register-title">Create user account</h1>
 
             <form class="register-form" action="" method="post" enctype="multipart/form-data">
-<!--enctype para subir foto del usuario-->
+                <!--enctype para subir foto del usuario-->
 
                 <div class="register-layout">
 
@@ -145,7 +145,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="register-photo">
                         <label class="photo-upload-circle" for="photo-input">
                             <span class="photo-plus">+</span>
-                            <input type="file" id="photo-input" name= "photo" accept="image/*" hidden>
+                            <input type="file" id="photo-input" name="photo" accept="image/*" hidden>
                         </label>
                         <p class="photo-label">Add photo</p>
                     </div>
@@ -154,8 +154,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 <!-- Botones -->
                 <div class="register-btns">
-                    <a href="/View/login/perfilUser.html" <button class="reg-btn reg-btn--primary" type="submit">Create
-                        account</button> </a>
+                    <button class="reg-btn reg-btn--primary" type="submit">Create
+                        account</button>
                     <a class="reg-btn reg-btn--secondary" href="../../home/home.html">Cancel</a>
                 </div>
 
