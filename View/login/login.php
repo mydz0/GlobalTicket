@@ -9,6 +9,11 @@ if (isset($_GET['error'])) {
     if ($_GET['error'] === 'error_login') $error_msg = "Logon error, try again";
 }
 
+if($_SERVER['REQUEST_METHOD'] === 'POST'){
+    $controlador = new useController();
+    $controlador->login($_POST);
+}
+
 
 ?>
 
