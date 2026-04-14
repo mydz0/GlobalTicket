@@ -9,6 +9,9 @@ if (isset($_GET['error']) && $_GET['error'] === "password") {
     $error_msg = "Password not match";
 }
 
+if (isset($_GET['error']) && $_GET['error'] === 'email')    $error_msg = "Invalid email format";
+if (isset($_GET['error']) && $_GET['error'] === 'username') $error_msg = "Username must be at least 3 characters, only letters, numbers and underscore";
+
 //cuando el usuario le da al boton (llamamos al metodo que pusimos):
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     //con esto creamos el objeto 
@@ -135,8 +138,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="field-group">
                             <label class="field-label" for="confirm-password">Confirm password</label>
                             <?php if ($error_msg) : ?>
-                                <p style = "color:red;"><?= $error_msg ?></p>
-                                <?php endif; ?>
+                                <p style="color:red;"><?= $error_msg ?></p>
+                            <?php endif; ?>
                             <input class="field-input" type="password" id="confirm-password" name="confirm-password"
                                 required minlength="6" placeholder=" ">
                             <span class="field-error">Password doesn't match</span>

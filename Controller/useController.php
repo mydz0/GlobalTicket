@@ -30,6 +30,18 @@ class useController
             exit();
         }
 
+        //validacion formato mail
+        if (!filter_var($datos['mail'], FILTER_VALIDATE_EMAIL)) {
+            header("Location: ../View/signIn/user/registerUser.php?error=email");
+            exit();
+        }
+
+        //vañidacion username min 3 caracteres y solo letras, numeros y underdash
+        if (!preg_match('/^[a-zA-Z0-9_]{3,}$/', $datos['username'])) {
+            header("Location: ../View/signIn/user/registerUser.php?error=username");
+            exit();
+        }
+
         //la foto: 
         if (isset($archivos['photo']) && $archivos['photo']['error'] === UPLOAD_ERR_OK) {
 
