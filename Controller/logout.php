@@ -1,5 +1,5 @@
 <?php
-require_once'../Controller/useController.php';
+require_once'useController.php';
 $controlador = new useController();
 $controlador->logout();
 ?>

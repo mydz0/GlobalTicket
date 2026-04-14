@@ -52,9 +52,14 @@ if (!isset($_SESSION['user_id'])) {
             <input class="sidebar-input" type="text" placeholder="">
         </div>
         <nav class="sidebar-nav">
-            <a href="#">Sign in</a>
-            <a href="#">Log in</a>
+            <?php if (isset($_SESSION['user_id'])): ?>
+                <a href="/Controller/logout.php">Log out</a>
+            <?php else: ?>
+                <a href="/View/signIn/signin.php">Sign in</a>
+                <a href="/View/login/login.php">Log in</a>
+            <?php endif; ?>
         </nav>
+
     </aside>
 
     <!-- ── PROFILE SIDEBAR (purple, slides from right) ── -->
@@ -79,7 +84,7 @@ if (!isset($_SESSION['user_id'])) {
         <nav class="profile-sidebar-nav">
             <a href="#">Favoritos</a>
             <a href="#">Eventos</a>
-            <a href="../home/home.html">Log out</a>
+            <a href="/Controller/logout.php">Log out</a>
         </nav>
     </aside>
 
