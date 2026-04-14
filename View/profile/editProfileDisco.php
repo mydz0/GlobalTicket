@@ -1,3 +1,13 @@
+<?php
+session_start();
+
+//redirigir directamente al log in si este no está logueado
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../../View/login/login.php");
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -111,7 +121,7 @@
                 </div>
                 <div class="edit-btns">
                     <a href="/View/login/perfilDisco.html"
-                    <button class="edit-btn" type="submit">Confirm</button></a>
+                        <button class="edit-btn" type="submit">Confirm</button></a>
                 </div>
             </form>
         </div>
