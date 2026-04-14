@@ -26,7 +26,7 @@ class useController
         if ($datos['password'] !== $datos['confirm-password']) {
 
             //ponemos el error por la ruta porque no deja poner return (usamoos el header)
-            header("Location: ../View/register/registerUser.php?error=password");
+            header("Location: ../View/signIn/registerUser.php?error=password");
             exit();
         }
 
@@ -44,7 +44,7 @@ class useController
             $nombreArchivo = time() . "_" . basename($archivos['photo']['name']);
             $rutaFinal = $directorioSubida . $nombreArchivo;
 
-            if (move_uploaded_file($archivos['photo']['tmp_name'], $rutaFinal)) {
+            if (move_uploaded_file($archivos['foto_perfil']['tmp_name'], $rutaFinal)) {
 
                 //cuando tengamos la base de datos esto lo deberiamos de cambiar, se guardaría en una variable
                 error_log("Foto subida con exito a: " . $rutaFinal);
