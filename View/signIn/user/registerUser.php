@@ -1,7 +1,7 @@
 <?php
 
 //llamar el controlador para usarlo
-require_once '../GlobalTicket/Controller/useController.php';
+require_once '../../Controller/useController.php';
 
 //mensaje que sale para cuando las contraseñas no coinciden:
 $error_msg = "";
@@ -134,6 +134,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                         <div class="field-group">
                             <label class="field-label" for="confirm-password">Confirm password</label>
+                            <?php if ($error_msg) : ?>
+                                <p style = "color:red;"><?= $error_msg ?></p>
+                                <?php endif; ?>
                             <input class="field-input" type="password" id="confirm-password" name="confirm-password"
                                 required minlength="6" placeholder=" ">
                             <span class="field-error">Password doesn't match</span>
