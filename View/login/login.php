@@ -1,3 +1,11 @@
+<?php
+//lamada al controlador
+require_once'../../Controller/useController.php';
+
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
