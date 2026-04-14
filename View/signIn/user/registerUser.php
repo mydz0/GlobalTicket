@@ -1,5 +1,7 @@
 <?php
 
+//llamar el controlador para usarlo
+require_once '../GlobalTicket/Controller/useController.php';
 
 //mensaje que sale para cuando las contraseñas no coinciden:
 $error_msg = "";
@@ -11,8 +13,9 @@ if (isset($_GET['error']) && $_GET['error'] === "password") {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     //con esto creamos el objeto 
     $controlador = new useController();
-    //usamos el metodo register que pusimos en la clase
-    $controlador->register($datos, $archivos);
+    //usamos el metodo register que pusimos en la clase, 
+    $controlador->register($_POST, $_FILES);
+    //ESTE RECIBE LOS DATOS DEL FORMULARIO 
 }
 ?>
 
