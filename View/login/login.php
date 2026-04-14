@@ -1,7 +1,13 @@
 <?php
 //lamada al controlador
-require_once'../../Controller/useController.php';
+require_once '../../Controller/useController.php';
 
+//control de errores login, username y password
+$error_msg = "";
+if (isset($_GET['error'])) {
+    if ($_GET['error'] === 'credenciales') $error_msg = "Username or password incorrect";
+    if ($_GET['error'] === 'error_login') $error_msg = "Logon error, try again";
+}
 
 
 ?>
@@ -26,8 +32,8 @@ require_once'../../Controller/useController.php';
 
     <!-- ══ CSS STATE MACHINE ══ -->
     <input type="checkbox" id="sidebar-toggle">
-    <input type="radio"    id="pick-user"           name="login-type">
-    <input type="radio"    id="pick-disco"          name="login-type">
+    <input type="radio" id="pick-user" name="login-type">
+    <input type="radio" id="pick-disco" name="login-type">
     <input type="checkbox" id="err-user-username">
     <input type="checkbox" id="err-user-password">
     <input type="checkbox" id="err-disco-username">
@@ -81,8 +87,8 @@ require_once'../../Controller/useController.php';
             </div>
             <label class="menu-btn" for="sidebar-toggle" aria-label="Open menu">
                 <svg width="22" height="16" viewBox="0 0 22 16" fill="none">
-                    <line x1="0" y1="1"  x2="22" y2="1"  stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                    <line x1="0" y1="8"  x2="22" y2="8"  stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    <line x1="0" y1="1" x2="22" y2="1" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    <line x1="0" y1="8" x2="22" y2="8" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
                     <line x1="0" y1="15" x2="22" y2="15" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
                 </svg>
             </label>
@@ -139,7 +145,7 @@ require_once'../../Controller/useController.php';
 
                     <label class="forgot-link" for="modal-user">Forgot password?</label>
                     <a href="/View/login/perfilUser.html"
-                    <label class="btn-login" for="err-user-username">Log in</label></a>
+                        <label class="btn-login" for="err-user-username">Log in</label></a>
 
                 </div>
 
@@ -176,7 +182,7 @@ require_once'../../Controller/useController.php';
 
                     <label class="forgot-link" for="modal-disco">Forgot password?</label>
                     <a href="../login/perfilDisco.html"
-                    <label class="btn-login" for="err-disco-username">Log in</label></a>
+                        <label class="btn-login" for="err-disco-username">Log in</label></a>
 
                 </div>
 
@@ -208,22 +214,32 @@ require_once'../../Controller/useController.php';
                 <img src="../home/logo.svg" alt="Global Tickets" class="logo-img">
             </div>
             <div class="footer-col">
-                <h4>Instagram</h4><p>@globaltickets</p>
-                <h4>Email</h4><p>ticket@globaltickets</p>
-                <h4>Contact</h4><p>+30 111 111 111</p>
+                <h4>Instagram</h4>
+                <p>@globaltickets</p>
+                <h4>Email</h4>
+                <p>ticket@globaltickets</p>
+                <h4>Contact</h4>
+                <p>+30 111 111 111</p>
             </div>
             <div class="footer-col">
-                <h4>Instagram</h4><p>@globaltickets</p>
-                <h4>Email</h4><p>ticket@globaltickets</p>
-                <h4>Contact</h4><p>+30 111 111 111</p>
+                <h4>Instagram</h4>
+                <p>@globaltickets</p>
+                <h4>Email</h4>
+                <p>ticket@globaltickets</p>
+                <h4>Contact</h4>
+                <p>+30 111 111 111</p>
             </div>
             <div class="footer-col">
-                <h4>Instagram</h4><p>@globaltickets</p>
-                <h4>Email</h4><p>ticket@globaltickets</p>
-                <h4>Contact</h4><p>+30 111 111 111</p>
+                <h4>Instagram</h4>
+                <p>@globaltickets</p>
+                <h4>Email</h4>
+                <p>ticket@globaltickets</p>
+                <h4>Contact</h4>
+                <p>+30 111 111 111</p>
             </div>
         </div>
     </footer>
 
 </body>
+
 </html>
