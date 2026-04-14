@@ -44,44 +44,47 @@ class useController
             $nombreArchivo = time() . "_" . basename($archivos['photo']['name']);
             $rutaFinal = $directorioSubida . $nombreArchivo;
 
-            if (move_uploaded_file($archivos['foto_perfil']['tmp_name'], $rutaFinal)) {
+            if (move_uploaded_file($archivos['photo']['tmp_name'], $rutaFinal)) {
 
                 //cuando tengamos la base de datos esto lo deberiamos de cambiar, se guardaría en una variable
                 error_log("Foto subida con exito a: " . $rutaFinal);
             }
         }
 
-        //con esto lo guardamos (luego tendremos q cambiarlo cuando tengamos la base de datos)
-        $todoCorrecto = true;
+        //insertar usuario en la base de datos
+        //crear contraseña antes de guardar
+        $passwordHash = password_hash($datos['password'], PASSWORD_DEFAULT);
 
-        //si todo esta bien (asumimos q si) pues te lo hace 
-        if ($todoCorrecto) {
+        //nombre de la foto (null si no hay foto)
+        $foto = isset($nombreArchivo) ? $nombreArchivo : null;
 
-            //tengo que poner la ruta
-            header("Location: ../home/home.html");
+        //prepared statement evitar sql injection
+        $stmt = $this->connection->prepare("INSERT INTO users (name, surname, mail, cellphone, username, password, photo) VALUES (?, ?, ?, ?, ?, ?, ?)");
 
+        $stmt->bind_param("sssssss", $datos['name'], $datos['surname'], $datos['mail'], $datos['cellphone'], $datos['username'], $passwordHash, $foto);
+
+        if ($stmt->execute()) {
+            header("Location: ../../home/home.html");
             exit();
         } else {
-
-            //el header es como un return: aqui tiene q ir la ruta
-            header("Location: ../View/register/registerUser.php?error=error_registro");
-
+            header("Location: ../user/registerUser.php?error=error_registro");
             exit();
         }
+
+        $stmt->close();
+        
     }
 
 
 
     //  REGISTER  (req. 4.4 — nombre exacto del diagrama UML)
     //  Decide si registrar usuario normal o discográfica según $_POST['type']
-    public function login(): void {
-        
-    }
+    public function login(): void {}
 
-    public function logout(): void {
+    public function logout(): void
+    {
         session_start();
         session_unset();
         session_destroy();
-
     }
 }
