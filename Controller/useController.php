@@ -23,7 +23,7 @@ class useController
     {
 
         //para ver que las contraseñas coincidan
-        if ($datos['password'] !== $datos['confirm password']) {
+        if ($datos['password'] !== $datos['confirm-password']) {
 
             //ponemos el error por la ruta porque no deja poner return (usamoos el header)
             header("Location: ../View/register/registerUser.php?error=password");
@@ -31,7 +31,7 @@ class useController
         }
 
         //la foto: 
-        if (isset($archivos['foto_perfil']) && $archivos['foto_perfil']['error'] === UPLOAD_ERR_OK) {
+        if (isset($archivos['photo']) && $archivos['photo']['error'] === UPLOAD_ERR_OK) {
 
             //creamos la carpeta para las fotos:
             $directorioSubida = "../../uploads/"; //la ruta donde se guarda la img
@@ -41,10 +41,10 @@ class useController
             }
 
             //el nom del archivo y donde lo guardamos:
-            $nombreArchivo = time() . "_" . basename($archivos['foto_perfil']['name']);
+            $nombreArchivo = time() . "_" . basename($archivos['photo']['name']);
             $rutaFinal = $directorioSubida . $nombreArchivo;
 
-            if (move_uploaded_file($archivos['foto_perfil']['tmp_name'], $rutaFinal)) {
+            if (move_uploaded_file($archivos['photo']['tmp_name'], $rutaFinal)) {
 
                 //cuando tengamos la base de datos esto lo deberiamos de cambiar, se guardaría en una variable
                 error_log("Foto subida con exito a: " . $rutaFinal);
