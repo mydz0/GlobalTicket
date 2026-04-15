@@ -5,11 +5,15 @@ class Database
     private static $instancia = null;
 
     // Datos de conexión
-    private string $host      = 'trolley.proxy.rlwy.net';
-    private string $usuario   = 'root';
-    private string $password  = 'QQSZVHcQKPqOKLCyGlokKZzoBsHaTkqs';
-    private string $baseDatos = 'railway';
-    private int    $port      = 32336;
+    private string $host = "localhost";
+    private string $usuario = "root";
+    private string $password = "";
+    private string $baseDatos = "globaltickets2";
+    // private string $host      = 'trolley.proxy.rlwy.net';
+    // private string $usuario   = 'root';
+    // private string $password  = 'QQSZVHcQKPqOKLCyGlokKZzoBsHaTkqs';
+    // private string $baseDatos = 'railway';
+    // private int    $port      = 32336;
 
     // Objeto de conexión mysqli
     private mysqli $conexion;

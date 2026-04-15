@@ -26,19 +26,19 @@ class useController
         if ($datos['password'] !== $datos['confirm-password']) {
 
             //ponemos el error por la ruta porque no deja poner return (usamoos el header)
-            header("Location: ../View/signIn/registerUser.php?error=password");
+            header("Location: /GlobalTicket/View/signIn/user/registerUser.php?error=password");
             exit();
         }
 
         //validacion formato mail
         if (!filter_var($datos['mail'], FILTER_VALIDATE_EMAIL)) {
-            header("Location: ../View/signIn/user/registerUser.php?error=email");
+            header("Location: /GlobalTicket/View/signIn/user/registerUser.php?error=email");
             exit();
         }
 
         //vañidacion username min 3 caracteres y solo letras, numeros y underdash
         if (!preg_match('/^[a-zA-Z0-9_]{3,}$/', $datos['username'])) {
-            header("Location: ../View/signIn/user/registerUser.php?error=username");
+            header("Location: /GlobalTicket/View/signIn/user/registerUser.php?error=username");
             exit();
         }
 
@@ -76,10 +76,10 @@ class useController
         $stmt->bind_param("sssssss", $datos['name'], $datos['surname'], $datos['mail'], $datos['cellphone'], $datos['username'], $passwordHash, $foto);
 
         if ($stmt->execute()) {
-            header("Location: ../../home/home.html");
+            header("Location: /GlobalTicket/View/home/home.html");
             exit();
         } else {
-            header("Location: ../user/registerUser.php?error=error_registro");
+            header("Location: /GlobalTicket/View/signIn/user/registerUser.php?error=error_registro");
             exit();
         }
 
@@ -89,12 +89,12 @@ class useController
     public function registerDisco($datos, $archivos): void
     {
         if ($datos['password'] !== $datos['confirm-password']) {
-            header("Location: ../View/signIn/discography/discoSignIn.php?error=password");
+            header("Location: /GlobalTicket/View/signIn/discography/discoSignIn.php?error=password");
             exit();
         }
 
         if (!filter_var($datos['mail'], FILTER_VALIDATE_EMAIL)) {
-            header("Location: ../View/signIn/discography/discoSignIn.php?error=email");
+            header("Location: /GlobalTicket/View/signIn/discography/discoSignIn.php?error=email");
             exit();
         }
 
@@ -126,10 +126,10 @@ class useController
         );
 
         if ($stmt->execute()) {
-            header("Location: ../../home/home.html");
+            header("Location: /GlobalTicket/View/home/home.html");
             exit();
         } else {
-            header("Location: ../View/signIn/discography/discoSignIn.php?error=error_registro");
+            header("Location: /GlobalTicket/View/signIn/discography/discoSignIn.php?error=error_registro");
             exit();
         }
         $stmt->close();
@@ -141,47 +141,48 @@ class useController
     //  Decide si registrar usuario normal o discográfica según $_POST['type']
     public function login($datos): void
     {
-        session_start();
-        if ($datos['tipo'] === 'user') {
-            //buscar usuario por username
-            $stmt = $this->connection->prepare("SELECT id, username, password, role FROM users WHERE username = ?");
-            $stmt->bind_param("s", $datos['username']);
-            $stmt->execute();
-            $resultado = $stmt->get_result();
-            $usuario = $resultado->fetch_assoc();
-            $stmt->close();
+        echo "en login";
+        // session_start();
+        // if ($datos['tipo'] === 'user') {
+        //     //buscar usuario por username
+        //     $stmt = $this->connection->prepare("SELECT id, username, password, role FROM users WHERE username = ?");
+        //     $stmt->bind_param("s", $datos['username']);
+        //     $stmt->execute();
+        //     $resultado = $stmt->get_result();
+        //     $usuario = $resultado->fetch_assoc();
+        //     $stmt->close();
 
-            //comprobar que existe y que coincida la contraseña
-            if ($usuario && password_verify($datos['password'], $usuario['password'])) {
-                $_SESSION['user_id'] = $usuario['id'];
-                $_SESSION['username'] = $usuario['username'];
-                $_SESSION['role'] = $usuario['role'];
-                header("Location: ../View/profile/perfilUser.php");
-                exit();
-            } else {
-                header("Location: ../View/login/login.php?error=credenciales");
-                exit();
-            }
-        } else {
-            //buscar discografia por cif
-            $stmt = $this->connection->prepare("SELECT id, name, password, role FROM discographies WHERE cif = ?");
-            $stmt->bind_param("s", $datos['cif']);
-            $stmt->execute();
-            $resultado = $stmt->get_result();
-            $disco = $resultado->fetch_assoc();
-            $stmt->close();
+        //     //comprobar que existe y que coincida la contraseña
+        //     if ($usuario && password_verify($datos['password'], $usuario['password'])) {
+        //         $_SESSION['user_id'] = $usuario['id'];
+        //         $_SESSION['username'] = $usuario['username'];
+        //         $_SESSION['role'] = $usuario['role'];
+        //         header("Location: /GlobalTicket/View/profile/perfilUser.php");
+        //         exit();
+        //     } else {
+        //         header("Location: /GlobalTicket/View/login/login.php?error=credenciales");
+        //         exit();
+        //     }
+        // } else {
+        //     //buscar discografia por cif
+        //     $stmt = $this->connection->prepare("SELECT id, name, password, role FROM discographies WHERE cif = ?");
+        //     $stmt->bind_param("s", $datos['cif']);
+        //     $stmt->execute();
+        //     $resultado = $stmt->get_result();
+        //     $disco = $resultado->fetch_assoc();
+        //     $stmt->close();
 
-            if ($disco && password_verify($datos['password'], $disco['password'])) {
-                $_SESSION['user_id'] = $disco['id'];
-                $_SESSION['username'] = $disco['name'];
-                $_SESSION['role'] = $disco['role'];
-                header("Location: ../View/profile/perfilDisco.php");
-                exit();
-            } else {
-                header("Location: ../View/login/login.php?error=credenciales");
-                exit();
-            }
-        }
+        //     if ($disco && password_verify($datos['password'], $disco['password'])) {
+        //         $_SESSION['user_id'] = $disco['id'];
+        //         $_SESSION['username'] = $disco['name'];
+        //         $_SESSION['role'] = $disco['role'];
+        //         header("Location: /GlobalTicket/View/profile/perfilDisco.php");
+        //         exit();
+        //     } else {
+        //         header("Location: /GlobalTicket/View/login/login.php?error=credenciales");
+        //         exit();
+        //     }
+        // }
     }
 
     public function logout(): void
@@ -189,7 +190,7 @@ class useController
         session_start();
         session_unset();
         session_destroy();
-        header("Location: ../View/login/login.php");
+        header("Location: /GlobalTicket/View/login/login.php");
         exit();
     }
 }
