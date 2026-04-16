@@ -1,7 +1,7 @@
 <?php
 //lamada al controlador
 require_once '../../Controller/useController.php';
-require_once '../Model/db.php';
+require_once '../../Model/db.php';
 
 //control de errores login, username y password
 $error_msg = "";
