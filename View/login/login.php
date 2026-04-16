@@ -143,7 +143,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <h1 class="login-title">Log in user</h1>
                 <div class="form-block">
                     <form method="post" action="../profile/perfilUser.php">
-
+                        <!--Redirección a home si no está registrado-->
                         <span class="field-lbl">Username</span>
                         <input class="field-input" type="text" name="username" autocomplete="off">
                         <label class="field-error err-user-username" for="err-user-username">Username incorrect</label>
