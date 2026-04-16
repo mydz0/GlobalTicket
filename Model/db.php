@@ -8,7 +8,7 @@ class Database
     private string $host = "localhost";
     private string $usuario = "root";
     private string $password = "";
-    private string $baseDatos = "mp0487_globaltickets";
+    private string $baseDatos = "globaltickets2";
     private int    $port      = 3306;
     // private string $host      = 'trolley.proxy.rlwy.net';
     // private string $usuario   = 'root';
