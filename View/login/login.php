@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link
         href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="/View/home/home.css">
+    <link rel="stylesheet" href="../home/home.css">
     <link rel="stylesheet" href="login.css">
 </head>
 
@@ -74,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <input class="sidebar-input" type="text" placeholder="">
         </div>
         <nav class="sidebar-nav">
-            <a href="#">Sign in</a>
+            <a href="../signIn/signin.php">Sign in</a>
             <a href="#">Log in</a>
         </nav>
     </aside>

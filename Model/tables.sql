@@ -1,6 +1,6 @@
 -- Create Database
-CREATE DATABASE IF NOT EXISTS globaltickets2;
-USE globaltickets2;
+CREATE DATABASE IF NOT EXISTS globaltickets;
+USE globaltickets;
 
 -- Create Users Table
 CREATE TABLE IF NOT EXISTS users (
