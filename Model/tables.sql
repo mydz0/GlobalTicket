@@ -1,5 +1,5 @@
 -- Create Database
-CREATE DATABASE IF NOT EXISTS mp0487_globaltickets;
+CREATE DATABASE IF NOT EXISTS globaltickets;
 USE globaltickets;
 
 -- Create Users Table
