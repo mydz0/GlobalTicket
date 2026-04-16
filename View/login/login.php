@@ -34,6 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="login.css">
 </head>
 
+<!--Arreglar problema css-->
+
 <body>
 
     <!-- ══ CSS STATE MACHINE ══ -->
@@ -140,7 +142,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="screen screen-user">
                 <h1 class="login-title">Log in user</h1>
                 <div class="form-block">
-                    <form method="post" action="">
+                    <form method="post" action="../profile/perfilUser.php">
 
                         <span class="field-lbl">Username</span>
                         <input class="field-input" type="text" name="username" autocomplete="off">
@@ -182,7 +184,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="screen screen-disco">
                 <h1 class="login-title">Log in discography</h1>
                 <div class="form-block">
-                    <form method="post" action="">
+                    <form method="post" action="../profile/perfilDisco.php">
 
                         <span class="field-lbl">CIF</span>
                         <input class="field-input" type="text" name="cif" autocomplete="off">
