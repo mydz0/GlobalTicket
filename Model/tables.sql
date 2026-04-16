@@ -1,6 +1,6 @@
 -- Create Database
 CREATE DATABASE IF NOT EXISTS mp0487_globaltickets;
-USE mp0487_globaltickets;
+USE globaltickets;
 
 -- Create Users Table
 CREATE TABLE IF NOT EXISTS users (
