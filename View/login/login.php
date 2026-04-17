@@ -142,7 +142,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="screen screen-user">
                 <h1 class="login-title">Log in user</h1>
                 <div class="form-block">
-                    <form method="post" action="../profile/perfilUser.php">
+                    <form method="post" action=""> //arriba esta el if($_SERVER ) q solo se ejecutara si volvemos a esta pagina 
 
                         <span class="field-lbl">Username</span>
                         <input class="field-input" type="text" name="username" autocomplete="off">
@@ -184,7 +184,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="screen screen-disco">
                 <h1 class="login-title">Log in discography</h1>
                 <div class="form-block">
-                    <form method="post" action="../profile/perfilDisco.php">
+                    <form method="post" action="">
 
                         <span class="field-lbl">CIF</span>
                         <input class="field-input" type="text" name="cif" autocomplete="off">

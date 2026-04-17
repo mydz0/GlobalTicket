@@ -65,7 +65,7 @@ class useController
 
         //insertar usuario en la base de datos
         //crear contraseña antes de guardar
-        $passwordHash = password_hash($datos['password'], PASSWORD_DEFAULT);
+        $passwordHash = $datos['password']; //quitar el encriptado de contraseña
 
         //nombre de la foto (null si no hay foto)
         $foto = isset($nombreArchivo) ? $nombreArchivo : null;
@@ -141,28 +141,28 @@ class useController
     //  Decide si registrar usuario normal o discográfica según $_POST['type']
     public function login($datos): void
     {
-        echo "en login";
+
         session_start();
         if ($datos['tipo'] === 'user') {
             //buscar usuario por username
-            $stmt = $this->connection->prepare("SELECT id, username, password, role FROM users WHERE username = ? and password = ?");
-            $stmt->bind_param("ss", $datos['username'], $datos['password']);
+            $stmt = $this->connection->prepare("SELECT id, username, password, role FROM users WHERE username = ? "); //and password = ? quitar para q la contraseña encriptada pueda comprobar
+            $stmt->bind_param("s", $datos['username']); //ya solo se pasa un parametro 
             $stmt->execute();
             $resultado = $stmt->get_result();
             $usuario = $resultado->fetch_assoc();
             $stmt->close();
 
             //comprobar que existe y que coincida la contraseña
-            if ($resultado->num_rows > 0) {
+            if ($usuario && $datos['password'] === $usuario['password']) {
                 $_SESSION['user_id'] = $usuario['id'];
                 $_SESSION['username'] = $usuario['username'];
                 $_SESSION['role'] = $usuario['role'];
-                echo "ok";
+
                 header("Location: ../profile/perfilUser.php");
                 // header("Location: /GlobalTicket/View/profile/perfilUser.php");
                 exit();
             } else {
-                echo "ko";
+
                 header("Location: ../login/login.php?error=credenciales");
                 exit();
             }
