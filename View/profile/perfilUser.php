@@ -125,11 +125,10 @@ if ($_SESSION['role'] !== 'user') {
                     <p>Lorem ipsum</p>
                     <p>Lorem ipsum jnaf</p>
                     <p>ujhbskjdbfjsbou</p>
-                    <a href="/View/login/editProfileUser.html" class="profile-edit-btn">Edit profile</a>
+                    <a href="../profile/editProfileUser.php" class="profile-edit-btn">Edit profile</a>
                 </div>
-            </div>
 
-        </div>
+            </div>
     </main>
 
     <!-- ── FOOTER ── -->

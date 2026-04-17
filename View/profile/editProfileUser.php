@@ -3,7 +3,7 @@ session_start();
 
 //redirigir directamente al log in si este no está logueado
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../../View/login/login.php");
+    header("Location: ../login/login.php");
     exit();
 }
 ?>
@@ -18,7 +18,7 @@ if (!isset($_SESSION['user_id'])) {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/View/home/home.css">
+    <link rel="stylesheet" href="../home/home.css">
     <link rel="stylesheet" href="editperfil.css">
 </head>
 
@@ -51,7 +51,7 @@ if (!isset($_SESSION['user_id'])) {
 
     <header class="header">
         <a href="../home/home.html" class="logo">
-            <img src="/View/home/logo.svg" alt="Global Tickets" class="logo-img">
+            <img src="../home/logo.svg" alt="Global Tickets" class="logo-img">
         </a>
         <label class="menu-btn" for="sidebar-toggle">
             <svg width="22" height="16" viewBox="0 0 22 16" fill="none">
