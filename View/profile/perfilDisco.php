@@ -99,7 +99,7 @@ if (!$user) {
         <nav class="profile-sidebar-nav">
             <a href="#">Favoritos</a>
             <a href="#">Eventos</a>
-            <a href="/Controller/logout.php">Log out</a>
+            <a href="/GlobalTicket/Controller/logout.php">Log out</a>
         </nav>
     </aside>
 
