@@ -13,6 +13,13 @@ if ($_SESSION['role'] !== 'user') {
     exit();
 }
 
+require_once '../../Model/db.php';
+$db = Database::getInstance()->getConexion();
+$stmt = $db->prepare("SELECT name, username FROM users WHERE id = ?");
+$stmt->bind_param("i", $_SESSION['user_id']);
+$stmt->execute();
+$user = $stmt->get_result()->fetch_assoc();
+$stmt->close();
 
 ?>
 
@@ -121,11 +128,9 @@ if ($_SESSION['role'] !== 'user') {
                     <span class="avatar-plus">+</span>
                 </div>
                 <div class="profile-info">
-                    <h2 class="profile-name">Lorem ipsum</h2>
-                    <p>Lorem ipsum</p>
-                    <p>Lorem ipsum jnaf</p>
-                    <p>ujhbskjdbfjsbou</p>
-                    <a href="../profile/editProfileUser.php" class="profile-edit-btn">Edit profile</a>
+                    <h2 class="profile-name"><?= htmlspecialchars($user['name']) ?></h2>
+                        <p><?= htmlspecialchars($user['username']) ?></p>
+                        <a href="../profile/editProfileUser.php" class="profile-edit-btn">Edit profile</a>
                 </div>
 
             </div>
