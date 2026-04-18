@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </aside>
 
     <header class="header">
-        <a href="../../home/home.html" class="logo">
+        <a href="../../home/home.php" class="logo">
             <img src="../../home/logo.svg" alt="Global Tickets" class="logo-img">
         </a>
         <label class="menu-btn" for="sidebar-toggle" aria-label="Open menu">
@@ -147,7 +147,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <?php endif; ?>
 
                     <button class="disco-btn disco-btn--primary" type="submit">Create profile</button>
-                    <a class="disco-btn disco-btn--secondary" href="../../home/home.html">Cancel</a>
+                    <a class="disco-btn disco-btn--secondary" href="../../home/home.php">Cancel</a>
                 </div>
 
             </form>

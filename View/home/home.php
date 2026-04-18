@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -42,8 +43,14 @@
             <input class="sidebar-input" type="text" placeholder="">
         </div>
         <nav class="sidebar-nav">
-            <a href="../signIn/signin.php">Sign in</a>
-            <a href="../login/login.php">Log in</a>
+            <?php if (isset($_SESSION['user_id'])): ?>
+                <a href="#">Favoritos</a>
+                <a href="#">Eventos</a>
+                <a href="/GlobalTicket/Controller/logout.php">Log out</a>
+            <?php else: ?>
+                <a href="../signIn/signin.php">Sign in</a>
+                <a href="../login/login.php">Log in</a>
+            <?php endif; ?>
         </nav>
     </aside>
 

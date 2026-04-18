@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <!-- ── HEADER ── -->
     <header class="header login-header">
-        <a href="../home/home.html" class="logo">
+        <a href="../home/home.php" class="logo">
             <img src="../home/logo.svg" alt="Global Tickets" class="logo-img">
         </a>
         <div class="header-right">

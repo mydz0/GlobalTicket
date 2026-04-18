@@ -1,56 +1,35 @@
 <?php
 session_start();
 
-//redirigir directamente al log in si este no está logueado
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../../View/login/login.php");
+    header("Location: /GlobalTicket/View/login/login.php");
     exit();
 }
-
-//comprobación de rol
-if ($_SESSION['role'] !== 'user') {
-    header("Location: ../../View/profile/perfilDisco.php");
-    exit();
-}
-
-require_once '../../Model/db.php';
-$db = Database::getInstance()->getConexion();
-$stmt = $db->prepare("SELECT name, username, photo FROM users WHERE id = ?");
-$stmt->bind_param("i", $_SESSION['user_id']);
-$stmt->execute();
-$user = $stmt->get_result()->fetch_assoc();
-$stmt->close();
-
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile — Global Tickets</title>
+    <title>PinkPanthress — Global Tickets</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="../home/home.css">
-    <link rel="stylesheet" href="perfil.css">
+    <link rel="stylesheet" href="event.css">
 </head>
 
 <body>
 
-    <!-- ══ CSS STATE MACHINE ══ -->
     <input type="checkbox" id="sidebar-toggle">
-    <input type="checkbox" id="profile-sidebar-toggle">
-
-    <!-- Overlays -->
     <label class="sidebar-overlay" for="sidebar-toggle"></label>
-    <label class="profile-overlay" for="profile-sidebar-toggle"></label>
 
-    <!-- ── MAIN SIDEBAR (hamburger menu) ── -->
+    <!-- ── SIDEBAR ── -->
     <aside class="sidebar">
         <div class="sidebar-top">
-            <label class="sidebar-close" for="sidebar-toggle" aria-label="Close">
+            <label class="sidebar-close" for="sidebar-toggle" aria-label="Close menu">
                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
                     <line x1="1" y1="1" x2="17" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
                     <line x1="17" y1="1" x2="1" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
@@ -76,41 +55,14 @@ $stmt->close();
                 <a href="/GlobalTicket/View/login/login.php">Log in</a>
             <?php endif; ?>
         </nav>
-
-    </aside>
-
-    <!-- ── PROFILE SIDEBAR (purple, slides from right) ── -->
-    <aside class="profile-sidebar">
-        <div class="profile-sidebar-top">
-            <label class="profile-sidebar-close" for="profile-sidebar-toggle" aria-label="Close">
-                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                    <line x1="1" y1="1" x2="17" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                    <line x1="17" y1="1" x2="1" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                </svg>
-            </label>
-            <button class="profile-sidebar-search" aria-label="Search">
-                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                    <circle cx="7.5" cy="7.5" r="5.5" stroke="currentColor" stroke-width="2" />
-                    <line x1="11.5" y1="11.5" x2="17" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                </svg>
-            </button>
-        </div>
-        <div class="profile-sidebar-search-row">
-            <input class="profile-sidebar-input" type="text" placeholder="">
-        </div>
-        <nav class="profile-sidebar-nav">
-            <a href="#">Favoritos</a>
-            <a href="#">Eventos</a>
-            <a href="/GlobalTicket/Controller/logout.php">Log out</a>
-        </nav>
     </aside>
 
     <!-- ── HEADER ── -->
-    <header class="header profile-header">
+    <header class="header">
         <a href="../home/home.php" class="logo">
             <img src="../home/logo.svg" alt="Global Tickets" class="logo-img">
         </a>
-        <label class="menu-btn" for="profile-sidebar-toggle" aria-label="Open menu">
+        <label class="menu-btn" for="sidebar-toggle" aria-label="Open menu">
             <svg width="22" height="16" viewBox="0 0 22 16" fill="none">
                 <line x1="0" y1="1" x2="22" y2="1" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
                 <line x1="0" y1="8" x2="22" y2="8" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
@@ -119,27 +71,38 @@ $stmt->close();
         </label>
     </header>
 
-    <!-- ── MAIN ── -->
-    <main class="profile-main">
-        <div class="profile-container">
+    <!-- ── EVENT CONTENT ── -->
+    <main class="event-main">
+        <div class="event-container">
 
-            <h1 class="profile-title">Profile</h1>
+            <h1 class="event-artist">PinkPanthress</h1>
 
-            <div class="profile-card">
-                <div class="avatar-circle">
-                    <?php if (!empty($user['photo'])): ?>
-                        <img src="/GlobalTicket/uploads/<?= htmlspecialchars($user['photo']) ?>" alt="Profile photo" class="avatar-img">
-                    <?php else: ?>
-                        <span class="avatar-plus">+</span>
-                    <?php endif; ?>
-                </div>
-                <div class="profile-info">
-                    <h2 class="profile-name"><?= htmlspecialchars($user['name']) ?></h2>
-                        <p><?= htmlspecialchars($user['username']) ?></p>
-                        <a href="../profile/editProfileUser.php" class="profile-edit-btn">Edit profile</a>
-                </div>
-
+            <div class="event-photo">
+                <img src="pinkpantheress2.webp" alt="PinkPanthress">
             </div>
+
+            <div class="event-infobar">
+                <div class="event-meta">
+                    <span class="event-date">19/04/2026</span>
+                    <span class="event-name">The Cyber-Shrine Session</span>
+                </div>
+                <a href="addEvent.html">
+                    <button class="event-reserve-btn">Reserva ahora</button>
+                </a>
+            </div>
+
+            <div class="event-body">
+                <h2 class="event-subtitle">Concierto Secreto en un Cybercafé</h2>
+                <p class="event-text">
+                    En su cumpleaños, PinkPantheress realiza un concierto pop-up
+                    ultrasecreto para 50 fans en un cibercafé abandonado de Bath.
+                    El set es una actuación lo-fi de 20 minutos, transmitida en baja
+                    resolución (360p) a través de un canal privado de Discord, con
+                    visuales generados por un software de edición de vídeo de 2002.
+                </p>
+            </div>
+
+        </div>
     </main>
 
     <!-- ── FOOTER ── -->
@@ -176,5 +139,4 @@ $stmt->close();
     </footer>
 
 </body>
-
 </html>

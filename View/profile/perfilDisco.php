@@ -65,10 +65,12 @@ if (!$user) {
         </div>
         <nav class="sidebar-nav">
             <?php if (isset($_SESSION['user_id'])): ?>
-                <a href="/Controller/logout.php">Log out</a>
+                <a href="#">Favoritos</a>
+                <a href="#">Eventos</a>
+                <a href="/GlobalTicket/Controller/logout.php">Log out</a>
             <?php else: ?>
-                <a href="/View/signIn/signin.php">Sign in</a>
-                <a href="/View/login/login.php">Log in</a>
+                <a href="/GlobalTicket/View/signIn/signin.php">Sign in</a>
+                <a href="/GlobalTicket/View/login/login.php">Log in</a>
             <?php endif; ?>
         </nav>
 
@@ -102,7 +104,7 @@ if (!$user) {
 
     <!-- ── HEADER ── -->
     <header class="header profile-header">
-        <a href="../home/home.html" class="logo">
+        <a href="../home/home.php" class="logo">
             <img src="../home/logo.svg" alt="Global Tickets" class="logo-img">
         </a>
         <label class="menu-btn" for="profile-sidebar-toggle" aria-label="Open menu">

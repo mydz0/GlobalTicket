@@ -76,7 +76,7 @@ class useController
         $stmt->bind_param("sssssss", $datos['name'], $datos['surname'], $datos['mail'], $datos['cellphone'], $datos['username'], $passwordHash, $foto);
 
         if ($stmt->execute()) {
-            header("Location: /GlobalTicket/View/home/home.html");
+            header("Location: /GlobalTicket/View/home/home.php");
             exit();
         } else {
             header("Location: /GlobalTicket/View/signIn/user/registerUser.php?error=error_registro");
@@ -126,7 +126,7 @@ class useController
         );
 
         if ($stmt->execute()) {
-            header("Location: /GlobalTicket/View/home/home.html");
+            header("Location: /GlobalTicket/View/home/home.php");
             exit();
         } else {
             header("Location: /GlobalTicket/View/signIn/discography/discoSignIn.php?error=error_registro");

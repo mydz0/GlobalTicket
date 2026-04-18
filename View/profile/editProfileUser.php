@@ -44,13 +44,14 @@ if (!isset($_SESSION['user_id'])) {
         </div>
         <div class="sidebar-search-row"><input class="sidebar-input" type="text" placeholder=""></div>
         <nav class="sidebar-nav">
-            <a href="#">Sign in</a>
-            <a href="#">Log in</a>
+            <a href="#">Favoritos</a>
+            <a href="#">Eventos</a>
+            <a href="/GlobalTicket/Controller/logout.php">Log out</a>
         </nav>
     </aside>
 
     <header class="header">
-        <a href="../home/home.html" class="logo">
+        <a href="../home/home.php" class="logo">
             <img src="../home/logo.svg" alt="Global Tickets" class="logo-img">
         </a>
         <label class="menu-btn" for="sidebar-toggle">
@@ -115,7 +116,7 @@ if (!isset($_SESSION['user_id'])) {
                 </div>
                 <div class="edit-btns">
                     <button class="edit-btn" type="submit">Confirm</button>
-                    <a class="edit-btn edit-btn--danger" href="../home/home.html">Delete account</a>
+                    <a class="edit-btn edit-btn--danger" href="../home/home.php">Delete account</a>
                 </div>
             </form>
         </div>
