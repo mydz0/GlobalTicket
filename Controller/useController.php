@@ -193,7 +193,7 @@ class useController
         session_start();
         session_unset();
         session_destroy();
-        header("Location: /GlobalTicket/View/signIn/signin.php");
+        header("Location: /GlobalTicket/View/login/login.php");
         exit();
     }
 }

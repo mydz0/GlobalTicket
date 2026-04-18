@@ -65,6 +65,7 @@ if (!$user) {
         </div>
         <nav class="sidebar-nav">
             <?php if (isset($_SESSION['user_id'])): ?>
+                <a href="/GlobalTicket/View/profile/perfilDisco.php">Profile</a>
                 <a href="#">Favoritos</a>
                 <a href="#">Eventos</a>
                 <a href="/GlobalTicket/Controller/logout.php">Log out</a>

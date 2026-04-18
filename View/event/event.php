@@ -47,6 +47,8 @@ if (!isset($_SESSION['user_id'])) {
         </div>
         <nav class="sidebar-nav">
             <?php if (isset($_SESSION['user_id'])): ?>
+                <?php $profileUrl = $_SESSION['role'] === 'disco' ? '/GlobalTicket/View/profile/perfilDisco.php' : '/GlobalTicket/View/profile/perfilUser.php'; ?>
+                <a href="<?= $profileUrl ?>">Profile</a>
                 <a href="#">Favoritos</a>
                 <a href="#">Eventos</a>
                 <a href="/GlobalTicket/Controller/logout.php">Log out</a>

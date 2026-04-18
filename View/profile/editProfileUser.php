@@ -44,6 +44,7 @@ if (!isset($_SESSION['user_id'])) {
         </div>
         <div class="sidebar-search-row"><input class="sidebar-input" type="text" placeholder=""></div>
         <nav class="sidebar-nav">
+            <a href="/GlobalTicket/View/profile/perfilUser.php">Profile</a>
             <a href="#">Favoritos</a>
             <a href="#">Eventos</a>
             <a href="/GlobalTicket/Controller/logout.php">Log out</a>
