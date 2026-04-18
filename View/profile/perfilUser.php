@@ -15,7 +15,7 @@ if ($_SESSION['role'] !== 'user') {
 
 require_once '../../Model/db.php';
 $db = Database::getInstance()->getConexion();
-$stmt = $db->prepare("SELECT name, username FROM users WHERE id = ?");
+$stmt = $db->prepare("SELECT name, username, photo FROM users WHERE id = ?");
 $stmt->bind_param("i", $_SESSION['user_id']);
 $stmt->execute();
 $user = $stmt->get_result()->fetch_assoc();
@@ -125,7 +125,11 @@ $stmt->close();
 
             <div class="profile-card">
                 <div class="avatar-circle">
-                    <span class="avatar-plus">+</span>
+                    <?php if (!empty($user['photo'])): ?>
+                        <img src="/GlobalTicket/uploads/<?= htmlspecialchars($user['photo']) ?>" alt="Profile photo" class="avatar-img">
+                    <?php else: ?>
+                        <span class="avatar-plus">+</span>
+                    <?php endif; ?>
                 </div>
                 <div class="profile-info">
                     <h2 class="profile-name"><?= htmlspecialchars($user['name']) ?></h2>

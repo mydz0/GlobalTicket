@@ -120,10 +120,8 @@ if ($_SESSION['role'] !== 'disco') {
                     <span class="avatar-plus">+</span>
                 </div>
                 <div class="profile-info">
-                    <h2 class="profile-name">Lorem ipsum</h2>
-                    <p>Lorem ipsum</p>
-                    <p>Lorem ipsum jnaf</p>
-                    <p>ujhbskjdbfjsbou</p>
+                    <h2 class="profile-name"><?= htmlspecialchars($user['name']) ?></h2>
+                    <p>CIF: <?= htmlspecialchars($user['cif']) ?></p>
                     <a href="/View/login/editProfileDisco.html" class="profile-edit-btn">Edit profile</a>
                 </div>
             </div>
