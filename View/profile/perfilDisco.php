@@ -1,15 +1,21 @@
 <?php
 session_start();
 
-//redirigir directamente al log in si este no está logueado
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../../View/login/login.php");
+    header("Location: /GlobalTicket/View/login/login.php");
     exit();
 }
 
-//comprobación de rol
-if ($_SESSION['role'] !== 'disco') {
-    header("Location: ../../View/profile/perfilUser.php");
+require_once '../../Model/db.php';
+$db = Database::getInstance()->getConexion();
+$stmt = $db->prepare("SELECT name, cif FROM discographies WHERE id = ?");
+$stmt->bind_param("i", $_SESSION['user_id']);
+$stmt->execute();
+$user = $stmt->get_result()->fetch_assoc();
+$stmt->close();
+
+if (!$user) {
+    header("Location: /GlobalTicket/View/login/login.php");
     exit();
 }
 
@@ -121,7 +127,7 @@ if ($_SESSION['role'] !== 'disco') {
                 </div>
                 <div class="profile-info">
                     <h2 class="profile-name"><?= htmlspecialchars($user['name']) ?></h2>
-                    <p>CIF: <?= htmlspecialchars($user['cif']) ?></p>
+                    <p><?= htmlspecialchars($user['cif']) ?></p>
                     <a href="/View/login/editProfileDisco.html" class="profile-edit-btn">Edit profile</a>
                 </div>
             </div>

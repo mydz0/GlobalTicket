@@ -111,8 +111,8 @@ class useController
             }
         }
 
-        $stmt = $this->connection->prepare("INSERT INTO discographies (name, cif, mail, cellphone, adress, password, photo)
-         VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt = $this->connection->prepare("INSERT INTO discographies (name, cif, mail, cellphone, adress, password, photo, role)
+         VALUES (?, ?, ?, ?, ?, ?, ?, 'disco')");
 
         $stmt->bind_param(
             "sssssss",
@@ -179,11 +179,11 @@ class useController
                 $_SESSION['user_id'] = $disco['id'];
                 $_SESSION['username'] = $disco['name'];
                 $_SESSION['role'] = $disco['role'];
-                // header("Location: /GlobalTicket/View/profile/perfilDisco.php");
-                // exit();
+                header("Location: /GlobalTicket/View/profile/perfilDisco.php");
+                exit();
             } else {
-                // header("Location: /GlobalTicket/View/login/login.php?error=credenciales");
-                // exit();
+                header("Location: /GlobalTicket/View/login/login.php?error=credenciales");
+                exit();
             }
         }
     }
