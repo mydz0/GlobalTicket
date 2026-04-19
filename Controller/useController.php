@@ -26,7 +26,7 @@ class useController
         if ($datos['password'] !== $datos['confirm-password']) {
 
             //ponemos el error por la ruta porque no deja poner return (usamoos el header)
-            header("Location: /GlobalTicket/View/signIn/user/registerUser.php?error=password");
+            header("Location: registerUser.php?error=password");        
             exit();
         }
 
@@ -148,8 +148,7 @@ class useController
             $stmt = $this->connection->prepare("SELECT id, username, password, role FROM users WHERE username = ? "); //and password = ? quitar para q la contraseña encriptada pueda comprobar
             $stmt->bind_param("s", $datos['username']); //ya solo se pasa un parametro 
             $stmt->execute();
-            $resultado = $stmt->get_result();
-            $usuario = $resultado->fetch_assoc();
+            $usuario = $stmt->get_result()->fetch_assoc();
             $stmt->close();
 
             //comprobar que existe y que coincida la contraseña
@@ -171,18 +170,17 @@ class useController
             $stmt = $this->connection->prepare("SELECT id, name, password, role FROM discographies WHERE cif = ?");
             $stmt->bind_param("s", $datos['cif']);
             $stmt->execute();
-            $resultado = $stmt->get_result();
-            $disco = $resultado->fetch_assoc();
+            $disco = $stmt->get_result()->fetch_assoc();
             $stmt->close();
 
             if ($disco && password_verify($datos['password'], $disco['password'])) {
                 $_SESSION['user_id'] = $disco['id'];
                 $_SESSION['username'] = $disco['name'];
                 $_SESSION['role'] = $disco['role'];
-                header("Location: /GlobalTicket/View/profile/perfilDisco.php");
+                header("Location: ../profile/perfilDisco.php"); 
                 exit();
             } else {
-                header("Location: /GlobalTicket/View/login/login.php?error=credenciales");
+                header("Location: ../login/login.php?error=credenciales");                
                 exit();
             }
         }
