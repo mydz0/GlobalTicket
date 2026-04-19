@@ -76,11 +76,10 @@ class useController
         $stmt->bind_param("sssssss", $datos['name'], $datos['surname'], $datos['mail'], $datos['cellphone'], $datos['username'], $passwordHash, $foto);
 
         if ($stmt->execute()) {
-            header("Location: /GlobalTicket/View/home/home.php");
-            exit();
+        header("Location: ../../home/home.php");            
+        exit();
         } else {
-            header("Location: /GlobalTicket/View/signIn/user/registerUser.php?error=error_registro");
-            exit();
+        header("Location: registerUser.php?error=error_registro");            exit();
         }
 
         $stmt->close();
@@ -186,4 +185,12 @@ class useController
         }
     }
 
+    public function logout(): void
+    {
+        session_start();
+        session_unset();
+        session_destroy();
+        header("Location: /GlobalTicket/View/login/login.php");
+        exit();
+    }
 }
