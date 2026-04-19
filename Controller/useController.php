@@ -25,20 +25,20 @@ class useController
         //para ver que las contraseñas coincidan
         if ($datos['password'] !== $datos['confirm-password']) {
             //ponemos el error por la ruta porque no deja poner return (usamoos el header)
-            header("Location: registerUser.php?error=password");        
+            header("Location: registerUser.php?error=password");
             exit();
         }
 
         //validacion formato mail
         if (!filter_var($datos['mail'], FILTER_VALIDATE_EMAIL)) {
-            header("Location: registerUser.php?error=email");            
+            header("Location: registerUser.php?error=email");
             exit();
         }
 
         //vañidacion username min 3 caracteres y solo letras, numeros y underdash
         if (!preg_match('/^[a-zA-Z0-9_]{3,}$/', $datos['username'])) {
-         header("Location: registerUser.php?error=username");   
-        exit();
+            header("Location: registerUser.php?error=username");
+            exit();
         }
 
         //la foto: 
@@ -74,21 +74,21 @@ class useController
 
         $stmt->bind_param("sssssss", $datos['name'], $datos['surname'], $datos['mail'], $datos['cellphone'], $datos['username'], $passwordHash, $foto);
 
-            mysqli_report(MYSQLI_REPORT_OFF);
-    
-    if ($stmt->execute()) {
-        header("Location: .../View/home/home.php");
-        exit();
-    } // Si falla (por ejemplo, email duplicado)
-    if ($this->connection->errno === 1062) {
-        header("Location: registerUser.php?error=email_exists");
-    } else {
-        header("Location: registerUser.php?error=db_error");
-    }
-    exit();
-}
+        mysqli_report(MYSQLI_REPORT_OFF);
 
+        if ($stmt->execute()) {
+            header("Location: .../View/home/home.php");
+            exit();
+        } // Si falla (por ejemplo, email duplicado)
+        if ($this->connection->errno === 1062) {
+            header("Location: registerUser.php?error=email_exists");
+        } else {
+            header("Location: registerUser.php?error=db_error");
+        }
+        exit();
     }
+
+
 
     public function registerDisco($datos, $archivos): void
     {
@@ -181,10 +181,10 @@ class useController
                 $_SESSION['user_id'] = $disco['id'];
                 $_SESSION['username'] = $disco['name'];
                 $_SESSION['role'] = $disco['role'];
-                header("Location: ../profile/perfilDisco.php"); 
+                header("Location: ../profile/perfilDisco.php");
                 exit();
             } else {
-                header("Location: ../login/login.php?error=credenciales");                
+                header("Location: ../login/login.php?error=credenciales");
                 exit();
             }
         }
