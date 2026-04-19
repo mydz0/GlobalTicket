@@ -24,7 +24,6 @@ class useController
 
         //para ver que las contraseñas coincidan
         if ($datos['password'] !== $datos['confirm-password']) {
-
             //ponemos el error por la ruta porque no deja poner return (usamoos el header)
             header("Location: registerUser.php?error=password");        
             exit();
@@ -32,14 +31,14 @@ class useController
 
         //validacion formato mail
         if (!filter_var($datos['mail'], FILTER_VALIDATE_EMAIL)) {
-            header("Location: /GlobalTicket/View/signIn/user/registerUser.php?error=email");
+            header("Location: registerUser.php?error=email");            
             exit();
         }
 
         //vañidacion username min 3 caracteres y solo letras, numeros y underdash
         if (!preg_match('/^[a-zA-Z0-9_]{3,}$/', $datos['username'])) {
-            header("Location: /GlobalTicket/View/signIn/user/registerUser.php?error=username");
-            exit();
+         header("Location: registerUser.php?error=username");   
+        exit();
         }
 
         //la foto: 
@@ -75,14 +74,20 @@ class useController
 
         $stmt->bind_param("sssssss", $datos['name'], $datos['surname'], $datos['mail'], $datos['cellphone'], $datos['username'], $passwordHash, $foto);
 
-        if ($stmt->execute()) {
-        header("Location: ../../home/home.php");            
+            mysqli_report(MYSQLI_REPORT_OFF);
+    
+    if ($stmt->execute()) {
+        header("Location: .../View/home/home.php");
         exit();
-        } else {
-        header("Location: registerUser.php?error=error_registro");            exit();
-        }
+    } // Si falla (por ejemplo, email duplicado)
+    if ($this->connection->errno === 1062) {
+        header("Location: registerUser.php?error=email_exists");
+    } else {
+        header("Location: registerUser.php?error=db_error");
+    }
+    exit();
+}
 
-        $stmt->close();
     }
 
     public function registerDisco($datos, $archivos): void
