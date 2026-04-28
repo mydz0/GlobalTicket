@@ -17,7 +17,6 @@
     background: var(--grey-light);
     border-bottom: none;
 }
-
 .header-right {
     display: flex;
     align-items: center;
