@@ -9,36 +9,30 @@ class Database
     private string $usuario = "root";
     private string $password = "";
     private string $baseDatos = "globaltickets";
-    private int    $port      = 3306;
-    // private string $host      = 'trolley.proxy.rlwy.net';
-    // private string $usuario   = 'root';
-    // private string $password  = 'QQSZVHcQKPqOKLCyGlokKZzoBsHaTkqs';
-    // private string $baseDatos = 'railway';
-    // private int    $port      = 32336;
+    private $port      = 3306;
 
-    // Objeto de conexión mysqli
-    private mysqli $conexion;
+    private $conexion;
 
-    // Constructor privado: solo se puede llamar desde esta misma clase
-    private function __construct()
+    public function getConexion()
     {
-        $this->conexion = new mysqli(
-            $this->host,
-            $this->usuario,
-            $this->password,
-            $this->baseDatos,
-            $this->port
-        );
+        $this->conexion = null;
 
-        // Comprobamos si hay error de conexión
-        if ($this->conexion->connect_error) {
-            die('Error de conexión: ' . $this->conexion->connect_error);
+        try {
+            $dsn = "mysql:host=" . $this->host . ";dbname=" . $this->baseDatos . ";charset=utf8mb4";
+
+            $opciones = [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                PDO::ATTR_EMULATE_PREPARES => false
+            ];
+
+            $this->conexion = new PDO($dsn, $this->usuario, $this->password, $opciones);
+        } catch (PDOException $e) {
+            echo "Error de conexión: " . $e->getMessage();
         }
 
-        // Charset para acentos y caracteres especiales
-        $this->conexion->set_charset('utf8mb4');
+        return $this->conexion;
     }
-
 
     // Método estático que devuelve la única instancia de la clase
     public static function getInstance(): self
@@ -50,8 +44,4 @@ class Database
     }
 
     // Devuelve el objeto mysqli para usarlo en las consultas
-    public function getConexion(): mysqli
-    {
-        return $this->conexion;
-    }
 }
