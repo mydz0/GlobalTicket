@@ -45,7 +45,7 @@ class useController
         if (isset($archivos['photo']) && $archivos['photo']['error'] === UPLOAD_ERR_OK) {
 
             //creamos la carpeta para las fotos:
-            $directorioSubida = "../../uploads/"; //la ruta donde se guarda la img
+            $directorioSubida = __DIR__ . "/../uploads/"; //la ruta donde se guarda la img
 
             if (!is_dir($directorioSubida)) {
                 mkdir($directorioSubida, 0777, true);
@@ -106,7 +106,7 @@ class useController
 
         $foto = null;
         if (isset($archivos['photo']) && $archivos['photo']['error'] === UPLOAD_ERR_OK) {
-            $directorioUploads = "../../uploads/";
+            $directorioUploads = __DIR__ . "/../uploads/";
             if (!is_dir($directorioUploads)) mkdir($directorioUploads, 0777, true);
             $fileName = time() . "_" . basename($archivos['photo']['name']);
             $rutaFinal = $directorioUploads . $fileName;
