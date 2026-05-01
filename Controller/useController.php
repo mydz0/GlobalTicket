@@ -11,7 +11,7 @@ class useController
      */
 
     // Atributo privado: conexión a la BD
-    private mysqli $connection;
+    private PDO $connection;
 
     public function __construct()
     {
@@ -72,20 +72,18 @@ class useController
         //prepared statement evitar sql injection
         $stmt = $this->connection->prepare("INSERT INTO users (name, surname, mail, cellphone, username, password, photo) VALUES (?, ?, ?, ?, ?, ?, ?)");
 
-        $stmt->bind_param("sssssss", $datos['name'], $datos['surname'], $datos['mail'], $datos['cellphone'], $datos['username'], $passwordHash, $foto);
-
-        mysqli_report(MYSQLI_REPORT_OFF);
-
-        if ($stmt->execute()) {
-            header("Location: .../View/home/home.php");
+        try {
+            $stmt->execute([$datos['name'], $datos['surname'], $datos['mail'], $datos['cellphone'], $datos['username'], $passwordHash, $foto]);
+            header("Location: /GlobalTicket/View/home/home.php");
             exit();
-        } // Si falla (por ejemplo, email duplicado)
-        if ($this->connection->errno === 1062) {
-            header("Location: registerUser.php?error=email_exists");
-        } else {
-            header("Location: registerUser.php?error=db_error");
+        } catch (PDOException $e) {
+            if ($e->getCode() === '23000') {
+                header("Location: registerUser.php?error=email_exists");
+            } else {
+                header("Location: registerUser.php?error=db_error");
+            }
+            exit();
         }
-        exit();
     }
 
 
@@ -118,25 +116,14 @@ class useController
         $stmt = $this->connection->prepare("INSERT INTO discographies (name, cif, mail, cellphone, adress, password, photo, role)
          VALUES (?, ?, ?, ?, ?, ?, ?, 'disco')");
 
-        $stmt->bind_param(
-            "sssssss",
-            $datos['name'],
-            $datos['cif'],
-            $datos['mail'],
-            $datos['cellphone'],
-            $datos['adress'],
-            $passwordHash,
-            $foto
-        );
-
-        if ($stmt->execute()) {
+        try {
+            $stmt->execute([$datos['name'], $datos['cif'], $datos['mail'], $datos['cellphone'], $datos['adress'], $passwordHash, $foto]);
             header("Location: /GlobalTicket/View/home/home.php");
             exit();
-        } else {
+        } catch (PDOException) {
             header("Location: /GlobalTicket/View/signIn/discography/discoSignIn.php?error=error_registro");
             exit();
         }
-        $stmt->close();
     }
 
 
@@ -150,10 +137,9 @@ class useController
         if ($datos['tipo'] === 'user') {
             //buscar usuario por username
             $stmt = $this->connection->prepare("SELECT id, username, password, role FROM users WHERE username = ? "); //and password = ? quitar para q la contraseña encriptada pueda comprobar
-            $stmt->bind_param("s", $datos['username']); //ya solo se pasa un parametro 
-            $stmt->execute();
-            $usuario = $stmt->get_result()->fetch_assoc();
-            $stmt->close();
+            $stmt->execute([$datos['username']]);
+            $usuario = $stmt->fetch();
+            $stmt = null;
 
             //comprobar que existe y que coincida la contraseña
             if ($usuario && $datos['password'] === $usuario['password']) {
@@ -172,10 +158,9 @@ class useController
         } else {
             //buscar discografia por cif
             $stmt = $this->connection->prepare("SELECT id, name, password, role FROM discographies WHERE cif = ?");
-            $stmt->bind_param("s", $datos['cif']);
-            $stmt->execute();
-            $disco = $stmt->get_result()->fetch_assoc();
-            $stmt->close();
+            $stmt->execute([$datos['cif']]);
+            $disco = $stmt->fetch();
+            $stmt = null;
 
             if ($disco && password_verify($datos['password'], $disco['password'])) {
                 $_SESSION['user_id'] = $disco['id'];
