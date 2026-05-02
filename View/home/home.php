@@ -12,6 +12,7 @@
         href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="home.css">
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 </head>
 
 <body>
@@ -62,6 +63,7 @@
             <img src="logo.svg" alt="Global Tickets" class="logo-img">
         </a>
 
+  
         <!-- Menu button – label toggles checkbox -->
         <label class="menu-btn" for="sidebar-toggle" aria-label="Open menu">
             <svg class="icon-hamburger" width="22" height="16" viewBox="0 0 22 16" fill="none">
@@ -183,15 +185,23 @@
         </div>
     </footer>
 
-    <script>
-        function updateCountdown() {
-            const el = document.getElementById('countdown');
-            let [h, m, s] = el.textContent.split(':').map(Number);
-            if (--s < 0) { s = 59; if (--m < 0) { m = 59; if (--h < 0) h = m = s = 0; } }
-            el.textContent = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
-        }
-        setInterval(updateCountdown, 1000);
-    </script>
+    <!-- ── COOKIE OVERLAY ── -->
+    <div id="cookie-overlay"></div>
+
+    <!-- ── COOKIE BANNER ── -->
+    <div id="cookie-banner">
+        <h2 class="cookie-title">Cookie Policy</h2>
+        <p>We use cookies to improve your experience on our site. Do you accept the use of cookies?</p>
+        <div class="cookie-actions">
+            <button id="btn-accept" class="cookie-btn cookie-btn-accept">Accept</button>
+            <button id="btn-reject" class="cookie-btn cookie-btn-reject">Reject</button>
+        </div>
+    </div>
+
+    <!-- ── REVIEW COOKIES BUTTON ── -->
+    <button id="btn-review">Cookie settings</button>
+
+    <script src="home.js"></script>
 </body>
 
 </html>
