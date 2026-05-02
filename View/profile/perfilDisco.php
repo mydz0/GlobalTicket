@@ -9,9 +9,10 @@ if (!isset($_SESSION['user_id'])) {
 require_once '../../Model/db.php';
 $db = Database::getInstance()->getConexion();
 $stmt = $db->prepare("SELECT name, cif FROM discographies WHERE id = ?");
-$stmt->execute([$_SESSION['user_id']]);
-$user = $stmt->fetch();
-$stmt = null;
+$stmt->bind_param("i", $_SESSION['user_id']);
+$stmt->execute();
+$user = $stmt->get_result()->fetch_assoc();
+$stmt->close();
 
 if (!$user) {
     header("Location: /GlobalTicket/View/login/login.php");

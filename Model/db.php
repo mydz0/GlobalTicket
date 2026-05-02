@@ -2,49 +2,43 @@
 class Database
 {
     // Instancia única (patrón Singleton)
-    private static ?self $instancia = null;
+    private static $instancia = null;
 
     // Datos de conexión
     private string $host = "localhost";
     private string $usuario = "root";
     private string $password = "";
     private string $baseDatos = "globaltickets";
-    //private $port      = 3306;
+    private int    $port      = 3306;
+    // private string $host      = 'trolley.proxy.rlwy.net';
+    // private string $usuario   = 'root';
+    // private string $password  = 'QQSZVHcQKPqOKLCyGlokKZzoBsHaTkqs';
+    // private string $baseDatos = 'railway';
+    // private int    $port      = 32336;
 
-    private  ?PDO $conexion = null;
+    // Objeto de conexión mysqli
+    private mysqli $conexion;
 
-    public function getConexion(): PDO
+    // Constructor privado: solo se puede llamar desde esta misma clase
+    private function __construct()
     {
-        if ($this->conexion === null) {
+        $this->conexion = new mysqli(
+            $this->host,
+            $this->usuario,
+            $this->password,
+            $this->baseDatos,
+            $this->port
+        );
 
-            try {
-                $dsn = "mysql:host=" . $this->host . ";dbname=" . $this->baseDatos . ";charset=utf8mb4";
-
-                $opciones = [
-                    // Modo de errores: lanzar excepciones
-                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-
-                    // Modo de fetch por defecto: array asociativo
-                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-
-                    // No emular prepared statements (más seguro)
-                    PDO::ATTR_EMULATE_PREPARES => false,
-
-                    // Conexiones persistentes (reutilizar conexiones)
-                    PDO::ATTR_PERSISTENT => true,
-
-                    // Timeout de conexión (segundos)
-                    PDO::ATTR_TIMEOUT => 5
-                ];
-
-                $this->conexion = new PDO($dsn, $this->usuario, $this->password, $opciones);
-            } catch (PDOException $e) {
-                throw new PDOException("Error de conexión: " . $e->getMessage());
-            }
+        // Comprobamos si hay error de conexión
+        if ($this->conexion->connect_error) {
+            die('Error de conexión: ' . $this->conexion->connect_error);
         }
 
-        return $this->conexion;
+        // Charset para acentos y caracteres especiales
+        $this->conexion->set_charset('utf8mb4');
     }
+
 
     // Método estático que devuelve la única instancia de la clase
     public static function getInstance(): self
@@ -53,5 +47,11 @@ class Database
             self::$instancia = new self();
         }
         return self::$instancia;
+    }
+
+    // Devuelve el objeto mysqli para usarlo en las consultas
+    public function getConexion(): mysqli
+    {
+        return $this->conexion;
     }
 }
