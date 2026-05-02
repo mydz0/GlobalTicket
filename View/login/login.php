@@ -1,10 +1,7 @@
 <?php
 //lamada al controlador
 require_once '../../Controller/useController.php';
-// require_once '../GlobalTicket/Model/db.php'; // ya incluido via useController.php
-
-// $database = new Database();
-// $conn = $database->getConexion();
+require_once '../../Model/db.php';
 
 //control de errores login, username y password
 $error_msg = "";
@@ -145,24 +142,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="screen screen-user">
                 <h1 class="login-title">Log in user</h1>
                 <div class="form-block">
-                    <form method="post" action="">
-                        <! -- arriba esta el if($_SERVER ) q solo se ejecutara si volvemos a esta pagina -->
+                    <form method="post" action=""> <! -- arriba esta el if($_SERVER ) q solo se ejecutara si volvemos a esta pagina -- >
 
-                            <span class="field-lbl">Username</span>
-                            <input class="field-input" type="text" name="username" autocomplete="off">
-                            <label class="field-error err-user-username" for="err-user-username">Username incorrect</label>
+                        <span class="field-lbl">Username</span>
+                        <input class="field-input" type="text" name="username" autocomplete="off">
+                        <label class="field-error err-user-username" for="err-user-username">Username incorrect</label>
 
-                            <span class="field-lbl">Password</span>
-                            <input class="field-input" type="password" name="password">
-                            <label class="field-error err-user-password" for="err-user-password">Password incorrect</label>
+                        <span class="field-lbl">Password</span>
+                        <input class="field-input" type="password" name="password">
+                        <label class="field-error err-user-password" for="err-user-password">Password incorrect</label>
 
-                            <label class="forgot-link" for="modal-user">Forgot password?</label>
-                            <input type="hidden" name="tipo" value="user">
-                            <?php if ($error_msg): ?>
-                                <p style="color:red;"><?= $error_msg ?></p>
-                            <?php endif; ?>
+                        <label class="forgot-link" for="modal-user">Forgot password?</label>
+                        <input type="hidden" name="tipo" value="user">
+                        <?php if ($error_msg): ?>
+                            <p style="color:red;"><?= $error_msg ?></p>
+                        <?php endif; ?>
 
-                            <button class="btn-login" type="submit">Log in</button>
+                        <button class="btn-login" type="submit">Log in</button>
                     </form>
                 </div>
 
