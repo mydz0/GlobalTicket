@@ -29,20 +29,8 @@ $(function () {
         }
     }
 
-    // Check stored decision on page load (#11)
-    var consent = localStorage.getItem(CONSENT_KEY);
-    if (consent === 'accepted' || consent === 'rejected') {
-        applyConsent(consent);
-    }
-
-    // Show modal on first scroll if no decision yet (#7)
-    var bannerShown = false;
-    $(window).on('scroll', function () {
-        if (!bannerShown && !localStorage.getItem(CONSENT_KEY)) {
-            bannerShown = true;
-            applyConsent(null);
-        }
-    });
+    // Show modal on page load if no decision stored yet (#7, #11)
+    applyConsent(localStorage.getItem(CONSENT_KEY));
 
     // Accept (#8, #10)
     $('#btn-accept').on('click', function () {
