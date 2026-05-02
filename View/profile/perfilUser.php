@@ -16,10 +16,9 @@ if ($_SESSION['role'] !== 'user') {
 require_once '../../Model/db.php';
 $db = Database::getInstance()->getConexion();
 $stmt = $db->prepare("SELECT name, username, photo FROM users WHERE id = ?");
-$stmt->bind_param("i", $_SESSION['user_id']);
-$stmt->execute();
-$user = $stmt->get_result()->fetch_assoc();
-$stmt->close();
+$stmt->execute([$_SESSION['user_id']]);
+$user = $stmt->fetch();
+$stmt = null;
 
 ?>
 
@@ -136,8 +135,8 @@ $stmt->close();
                 </div>
                 <div class="profile-info">
                     <h2 class="profile-name"><?= htmlspecialchars($user['name']) ?></h2>
-                        <p><?= htmlspecialchars($user['username']) ?></p>
-                        <a href="../profile/editProfileUser.php" class="profile-edit-btn">Edit profile</a>
+                    <p><?= htmlspecialchars($user['username']) ?></p>
+                    <a href="../profile/editProfileUser.php" class="profile-edit-btn">Edit profile</a>
                 </div>
 
             </div>
