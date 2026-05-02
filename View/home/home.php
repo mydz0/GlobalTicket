@@ -13,6 +13,72 @@
         rel="stylesheet">
     <link rel="stylesheet" href="home.css">
     <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <style>
+        #cookie-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 490;
+        }
+        #cookie-banner {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 480px;
+            background: #fff;
+            padding: 40px 40px 32px;
+            z-index: 500;
+            box-shadow: 0 8px 48px rgba(0,0,0,0.18);
+            flex-direction: column;
+            font-family: 'DM Sans', sans-serif;
+        }
+        .cookie-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #000;
+        }
+        #cookie-banner p {
+            font-size: 13px;
+            color: #444;
+            line-height: 1.6;
+            margin: 0;
+        }
+        .cookie-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+        .cookie-btn {
+            flex: 1;
+            padding: 12px 16px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            border: 2px solid #000;
+            transition: background 0.15s, color 0.15s;
+        }
+        .cookie-btn-accept {
+            background: #000;
+            color: #fff;
+        }
+        .cookie-btn-accept:hover {
+            background: #ff2222;
+            border-color: #ff2222;
+        }
+        .cookie-btn-reject {
+            background: #fff;
+            color: #000;
+        }
+        .cookie-btn-reject:hover {
+            background: #f0f0f0;
+        }
+    </style>
 </head>
 
 <body>
