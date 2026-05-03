@@ -12,6 +12,10 @@
         href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="home.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 </head>
 
 <body>
@@ -77,16 +81,16 @@
         <img src="theMarias.jpg" alt="The Marias" class="hero-img">
     </section>
 
-    <!-- ── MAIN GRID ── -->
-    <main class="container">
-        <div class="grid">
+        <!-- ── MAIN GRID ── -->
+        <main class="container">
+            <div class="grid">
 
-            <a class="card" href="../event/event.php">
-                <img src="wte.jpg" alt="Wave to Earth">
-                <div class="card-info">
-                    <p class="card-desc">Lorem ipsum dolor sit amet</p>
-                    <h3>Wave to Earth</h3>
-                </div>
+                <a class="card" href="../event/event.php">
+                    <img src="wte.jpg" alt="Wave to Earth">
+                    <div class="card-info">
+                        <p class="card-desc">Lorem ipsum dolor sit amet</p>
+                        <h3>Wave to Earth</h3>
+                    </div>
             </a>
 
             <a class="card" href="../event/event.php">
@@ -139,15 +143,23 @@
                 <img src="ad.jpg" alt="Ad">
             </div>
 
-            <!-- Countdown -->
+            <!-- Countdown  hice un cambio aqui para que los sliders no se salgan por los lados     -->
+
             <div class="card countdown-card">
                 <h2 class="countdown-title">COUNTDOWN</h2>
                 <div class="timer" id="countdown">04:10:20</div>
                 <button class="reserve-btn">RESERVA AHORA</button>
-            </div>
+            </div> 
 
+        </div> <div class="tus-sliders" style="margin-top: 40px;">
+             <h2 style="font-family: 'Bebas Neue'; color: white;">PRÓXIMOS CONCIERTOS</h2>
+             <div class="slider-conciertos">
+                 <div><img src="charliXCX.webp" style="width:100%"><p>Charli XCX</p></div>
+                 <div><img src="frankOcean.jpg" style="width:100%"><p>Frank Ocean</p></div>
+                 <div><img src="kaliUchis.webp" style="width:100%"><p>Kali Uchis</p></div>
+             </div>
         </div>
-    </main>
+        </main>
 
     <!-- ── FOOTER ── -->
     <footer class="footer">
