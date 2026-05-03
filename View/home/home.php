@@ -203,7 +203,49 @@
             el.textContent = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
         }
         setInterval(updateCountdown, 1000);
+        function updateCountdown() {
+            const el = document.getElementById('countdown');
+            if(!el) return; // Por si acaso
+            let [h, m, s] = el.textContent.split(':').map(Number);
+            if (--s < 0) { s = 59; if (--m < 0) { m = 59; if (--h < 0) h = m = s = 0; } }
+            el.textContent = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+        }
+        setInterval(updateCountdown, 1000);
+
+        // --- CÓDIGO NUEVO (Sliders - Issues #16 y #17) ---
+        $(document).ready(function(){
+            // Slider 1: Conciertos (Configuración para 3 resoluciones)
+            $('.slider-conciertos').slick({
+                slidesToShow: 3,
+                slidesToScroll: 1,
+                autoplay: true,
+                responsive: [
+                    {
+                        breakpoint: 1024, // Tablet
+                        settings: { slidesToShow: 2 }
+                    },
+                    {
+                        breakpoint: 600, // Móvil
+                        settings: { slidesToShow: 1 }
+                    }
+                ]
+            });
+
+            // Slider 2: Promotores (Configuración diferente)
+            $('.slider-promotores').slick({
+                slidesToShow: 3,
+                dots: true,
+                arrows: false,
+                responsive: [
+                    {
+                        breakpoint: 768,
+                        settings: { slidesToShow: 1 }
+                    }
+                ]
+            });
+        });
     </script>
+                
 </body>
 
 </html>
