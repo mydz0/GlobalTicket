@@ -20,6 +20,12 @@
 
 <body>
 
+    <!-- ── Banner para cookies── -->
+    <div id="cookie-banner" style="display:none; position: fixed; bottom: 0; width: 100%; background: rgba(0,0,0,0.9); color: #fff; padding: 20px; text-align: center; z-index: 9999; font-family: 'DM Sans', sans-serif;">
+    <p>Este sitio utiliza cookies para funcionar. Debes aceptarlas para poder acceder al Login y Registro.</p>
+    <button id="accept-cookies" style="background: #fff; color: #000; border: none; padding: 10px 20px; cursor: pointer; font-weight: bold; margin-top: 10px; border-radius: 5px;">ACEPTAR</button>
+    </div>
+
     <!-- ── HIDDEN CHECKBOX – CSS-only sidebar toggle ── -->
     <input type="checkbox" id="sidebar-toggle">
 
@@ -53,6 +59,9 @@
                 <a href="#">Favoritos</a>
                 <a href="#">Eventos</a>
                 <a href="/GlobalTicket/Controller/logout.php">Log out</a>
+                    <!-- ── Añado esto para la parte de hacer login si no acepta ── -->
+                <a href="../signIn/signin.php" class="auth-link">Sign in</a>
+                <a href="../login/login.php" class="auth-link">Log in</a>
             <?php else: ?>
                 <a href="../signIn/signin.php">Sign in</a>
                 <a href="../login/login.php">Log in</a>
@@ -195,6 +204,8 @@
         </div>
     </footer>
 
+        <!-- ── Logica jQuery ── -->
+
     <script>
         function updateCountdown() {
             const el = document.getElementById('countdown');
@@ -204,6 +215,24 @@
         }
         setInterval(updateCountdown, 1000);
     </script>
+
+    <script>
+$(document).ready(function() {
+    // Verificamos si ya aceptó las cookies antes
+    if (!localStorage.getItem('cookies_aceptadas')) {
+        $('#cookie-banner').show(); // Mostramos el aviso
+        $('.auth-link').hide();      // Escondemos los botones de login/registro
+    }
+
+    // Acción al pulsar el botón ACEPTAR
+    $('#accept-cookies').click(function() {
+        localStorage.setItem('cookies_aceptadas', 'true'); // Guardamos en el navegador
+        $('#cookie-banner').fadeOut();                      // Quitamos el aviso con efecto
+        $('.auth-link').fadeIn();                           // Mostramos los botones de login
+    });
+});
+</script>
+
 </body>
 
 </html>
