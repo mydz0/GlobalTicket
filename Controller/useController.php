@@ -156,7 +156,6 @@ class useController
                 $_SESSION['role'] = $usuario['role'];
 
                 header("Location: ../profile/perfilUser.php");
-                // header("Location: /GlobalTicket/View/profile/perfilUser.php");
                 exit();
             } else {
 
