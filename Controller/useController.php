@@ -54,7 +54,7 @@ class useController
                 }
             }
 
-            $passwordHash = $datos['password']; //quitar el encriptado de contraseña
+            $passwordHash = password_hash($datos['password'], PASSWORD_DEFAULT);
 
             $sql = "INSERT INTO users (name, surname, mail, cellphone, username, password, photo)
                     VALUES (:name, :surname, :mail, :cellphone, :username, :password, :photo)";
