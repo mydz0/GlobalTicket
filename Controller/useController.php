@@ -18,9 +18,16 @@ class useController
         $this->connection = Database::getInstance()->getConexion();
     }
 
+    // REGISTRO USUARIO: 
     public function register($datos, $archivos): void
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') return; {
+
+            //validación
+            if (empty($datos['username']) || empty($datos['password']) || empty($datos['mail'])) {
+                header("Location: registerUser.php?error=empty");
+                exit();
+            }
 
             //para ver que las contraseñas coincidan
             if ($datos['password'] !== $datos['confirm-password']) {
@@ -40,39 +47,31 @@ class useController
                 exit();
             }
 
-            //la foto:
-            $foto = null;
-            if (isset($archivos['photo']) && $archivos['photo']['error'] === UPLOAD_ERR_OK) {
-                $directorioSubida = __DIR__ . "/../uploads/";
-                if (!is_dir($directorioSubida)) {
-                    mkdir($directorioSubida, 0777, true);
-                }
-                $nombreArchivo = time() . "_" . basename($archivos['photo']['name']);
-                $rutaFinal = $directorioSubida . $nombreArchivo;
-                if (move_uploaded_file($archivos['photo']['tmp_name'], $rutaFinal)) {
-                    $foto = $nombreArchivo;
-                }
-            }
+            //FOTO:
+            $foto = $this->subirFoto($archivos);
 
             //encriptación de contraseña
             $passwordHash = password_hash($datos['password'], PASSWORD_DEFAULT);
 
             $sql = "INSERT INTO users (name, surname, mail, cellphone, username, password, photo)
                     VALUES (:name, :surname, :mail, :cellphone, :username, :password, :photo)";
+
             $stmt = $this->connection->prepare($sql);
 
             try {
                 $stmt->execute([
-                    ':name'      => $datos['name'],
-                    ':surname'   => $datos['surname'],
+                    ':name'      => $datos['name'] ?? null,
+                    ':surname'   => $datos['surname'] ?? null,
                     ':mail'      => $datos['mail'],
-                    ':cellphone' => $datos['cellphone'],
+                    ':cellphone' => $datos['cellphone'] ?? null,
                     ':username'  => $datos['username'],
                     ':password'  => $passwordHash,
                     ':photo'     => $foto,
                 ]);
+
                 header("Location: /GlobalTicket/View/home/home.php");
                 exit();
+
             } catch (PDOException $e) {
                 if ($e->getCode() === '23000') {
                     header("Location: registerUser.php?error=email_exists");
@@ -85,7 +84,7 @@ class useController
     }
 
 
-
+    // REGISTRO DISCO:
     public function registerDisco($datos, $archivos): void
     {
         if ($datos['password'] !== $datos['confirm-password']) {
@@ -98,22 +97,15 @@ class useController
             exit();
         }
 
+        //Subir foto:
+        $foto = $this->subirFoto($archivos);
+
         //encriptación de contraseña
         $passwordHash = password_hash($datos['password'], PASSWORD_DEFAULT);
 
-        $foto = null;
-        if (isset($archivos['photo']) && $archivos['photo']['error'] === UPLOAD_ERR_OK) {
-            $directorioUploads = __DIR__ . "/../uploads/";
-            if (!is_dir($directorioUploads)) mkdir($directorioUploads, 0777, true);
-            $fileName = time() . "_" . basename($archivos['photo']['name']);
-            $rutaFinal = $directorioUploads . $fileName;
-            if (move_uploaded_file($archivos['photo']['tmp_name'], $rutaFinal)) {
-                $foto = $fileName;
-            }
-        }
-
         $sql = "INSERT INTO discographies (name, cif, mail, cellphone, adress, password, photo, role)
                 VALUES (:name, :cif, :mail, :cellphone, :adress, :password, :photo, 'disco')";
+
         $stmt = $this->connection->prepare($sql);
 
         try {
@@ -126,8 +118,10 @@ class useController
                 ':password'  => $passwordHash,
                 ':photo'     => $foto,
             ]);
+
             header("Location: /GlobalTicket/View/home/home.php");
             exit();
+
         } catch (PDOException) {
             header("Location: /GlobalTicket/View/signIn/discography/discoSignIn.php?error=error_registro");
             exit();
@@ -143,11 +137,13 @@ class useController
 
         session_start();
         if ($datos['tipo'] === 'user') {
+
             //buscar usuario por username
-            $stmt = $this->connection->prepare("SELECT id, username, password, role FROM users WHERE username = ? "); //and password = ? quitar para q la contraseña encriptada pueda comprobar
-            $stmt->execute([$datos['username']]);
+            $sql = "SELECT id, username, password, role FROM users WHERE username = :username";
+            $stmt = $this->connection->prepare($sql); //and password = ? quitar para q la contraseña encriptada pueda comprobar
+            $stmt->execute([': username' => $datos['username']]);
+
             $usuario = $stmt->fetch();
-            $stmt = null;
 
             //comprobar que existe y que coincida la contraseña
             if ($usuario && password_verify($datos['password'],  $usuario['password'])) {
@@ -157,37 +153,70 @@ class useController
 
                 header("Location: ../profile/perfilUser.php");
                 exit();
+
             } else {
 
-                header("Location: ../login/login.php?error=credenciales");
-                exit();
-            }
-        } else {
-            //buscar discografia por cif
-            $stmt = $this->connection->prepare("SELECT id, name, password, role FROM discographies WHERE cif = ?");
-            $stmt->execute([$datos['cif']]);
-            $disco = $stmt->fetch();
-            $stmt = null;
+                $sql = "SELECT id, name, password, role FROM discographies WHERE cif = :cif";
+                $stmt = $this->connection->prepare($sql);
+                $stmt->execute([':cif' => $datos['cif']]);
 
-            if ($disco && password_verify($datos['password'], $disco['password'])) {
+                $disco = $stmt ->fetch();
+                
+                if ($disco && password_verify($datos['password'], $disco['password'])) {
                 $_SESSION['user_id'] = $disco['id'];
                 $_SESSION['username'] = $disco['name'];
                 $_SESSION['role'] = $disco['role'];
-                header("Location: ../profile/perfilDisco.php");
-                exit();
-            } else {
+
                 header("Location: ../login/login.php?error=credenciales");
                 exit();
             }
+
+
+        } 
         }
+
+        header("Location: ../login/login.php?error=credenciales");
+        exit();
     }
+
 
     public function logout(): void
     {
         session_start();
         session_unset();
         session_destroy();
+
         header("Location: /GlobalTicket/View/login/login.php");
         exit();
+
+    }
+
+
+    // Para subir una img al servidor y que devuelva el nom del archivo 
+    // recibe el array de archivo, el $_FILES
+    private function subirFoto($archivos): ?string {
+
+        // esto comprubea si existe el archivo
+        if (!isset($archivos['photo']) || $archivos['photo']['error'] !== UPLOAD_ERR_OK) {
+            return null;
+        }
+
+        // Aqui le decimos donde guardarla la img 
+        $directorio = __DIR__ . "/../uploads/";
+
+        // Y si no existe, lo crea 
+        if (!is_dir($directorio)) {
+            mkdir($directorio, 0777, true);
+        }
+
+        $nombre = time() . "_" . basename($archivos['photo']['name']);
+        $ruta = $directorio . $nombre;
+
+        if (move_uploaded_file($archivos['photo']['tmp_name'], $ruta)) {
+            return $nombre;
+        }
+
+        return null;
+        
     }
 }
