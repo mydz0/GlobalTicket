@@ -13,6 +13,7 @@
     <!-- Reutilizamos los estilos base del home (header, sidebar, footer) -->
     <link rel="stylesheet" href="../home/home.css">
     <link rel="stylesheet" href="event.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 </head>
 
 <body>
@@ -81,9 +82,7 @@
                     <span class="event-date">19/04/2026</span>
                     <span class="event-name">The Cyber-Shrine Session</span>
                 </div>
-                <a href="addEvent.html">
-                <button class="event-reserve-btn" >Reserva ahora</button>
-                </a>
+                <button class="event-reserve-btn" id="btn-reserva">Reserva ahora</button>
             </div>
 
             <!-- Description -->
@@ -133,6 +132,39 @@
             </div>
         </div>
     </footer>
+
+    <!-- modal reserva -->
+    <div id="modal-overlay" class="modal-overlay">
+        <div class="modal-box">
+            <h2>Confirma tu reserva</h2>
+            <p>Estás a punto de reservar una entrada para <strong>PinkPanthress</strong></p>
+            <p class="modal-date">19/04/2026 — The Cyber-Shrine Session</p>
+            <div class="modal-actions">
+                <button class="modal-confirm-btn">Confirmar</button>
+                <button class="modal-cancel-btn">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+
+            $('#btn-reserva').on('click', function() {
+                $('#modal-overlay').addClass('active');
+            });
+
+            $('#modal-overlay').on('click', function(e) {
+                if ($(e.target).is('#modal-overlay')) {
+                    $(this).removeClass('active');
+                }
+            });
+
+            $('.modal-cancel-btn').on('click', function() {
+                $('#modal-overlay').removeClass('active');
+            });
+
+        });
+    </script>
 
 </body>
 

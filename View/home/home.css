@@ -191,13 +191,21 @@ a.card {
     color: inherit;
 }
 
-a.card:hover img {
-    opacity: 0.88;
-    transition: opacity 0.2s ease;
+.card-img-wrap {
+    position: relative;
+    overflow: hidden;
 }
 
-a.card img {
-    transition: opacity 0.2s ease;
+.card-img-wrap img {
+    transition: transform 0.3s ease;
+}
+
+a.card:hover .card-img-wrap img {
+    transform: scale(1.04);
+}
+
+a.card:hover .card-info {
+    transform: translateY(0);
 }
 
 /* Card base */
@@ -241,18 +249,26 @@ a.card {
 }
 
 .card-info {
-    padding: 8px 0 4px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 12px 14px;
+    background: rgba(0, 0, 0, 0.72);
+    transform: translateY(100%);
+    transition: transform 0.28s ease;
 }
 
 .card-desc {
     font-size: 10px;
-    color: #555;
+    color: #ccc;
     margin-bottom: 2px;
 }
 
 .card-info h3 {
     font-size: 13px;
     font-weight: 700;
+    color: var(--white);
 }
 
 /* Tall ad – column 3, rows 1–3 */
