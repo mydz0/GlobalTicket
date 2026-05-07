@@ -156,7 +156,7 @@ class useController
             $stmt->close();
 
             //comprobar que existe y que coincida la contraseña
-            if ($usuario && $datos['password'] === $usuario['password']) {
+            if ($usuario && password_verify($datos['password'], $usuario['password'])) {
                 $_SESSION['user_id'] = $usuario['id'];
                 $_SESSION['username'] = $usuario['username'];
                 $_SESSION['role'] = $usuario['role'];
@@ -188,6 +188,96 @@ class useController
                 exit();
             }
         }
+    }
+
+    public function updateUser(array $datos, array $archivos): void
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        if (!isset($_SESSION['user_id'])) {
+            header("Location: /GlobalTicket/View/login/login.php");
+            exit();
+        }
+
+        $id = $_SESSION['user_id'];
+
+        if (!filter_var($datos['mail'], FILTER_VALIDATE_EMAIL)) {
+            header("Location: /GlobalTicket/View/profile/editProfileUser.php?error=email");
+            exit();
+        }
+
+        if (!preg_match('/^[a-zA-Z0-9_]{3,}$/', $datos['username'])) {
+            header("Location: /GlobalTicket/View/profile/editProfileUser.php?error=username");
+            exit();
+        }
+
+        // Obtener contraseña y foto actuales para conservarlas si no se cambian
+        $stmt = $this->connection->prepare("SELECT password, photo FROM users WHERE id = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $current = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+
+        $newPassword    = trim($datos['password'] ?? '');
+        $confirmPassword = trim($datos['confirm-password'] ?? '');
+        $passwordToSave = $current['password'];
+
+        if ($newPassword !== '') {
+            if ($newPassword !== $confirmPassword) {
+                header("Location: /GlobalTicket/View/profile/editProfileUser.php?error=password");
+                exit();
+            }
+            $passwordToSave = password_hash($newPassword, PASSWORD_DEFAULT);
+        }
+
+        $photoToSave = $current['photo'];
+        if (isset($archivos['photo']) && $archivos['photo']['error'] === UPLOAD_ERR_OK) {
+            $allowed = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+            $ext = strtolower(pathinfo($archivos['photo']['name'], PATHINFO_EXTENSION));
+            if (!in_array($ext, $allowed)) {
+                header("Location: /GlobalTicket/View/profile/editProfileUser.php?error=photo");
+                exit();
+            }
+            $directorioSubida = dirname(__FILE__) . "/../View/uploads/";
+            if (!is_dir($directorioSubida)) {
+                mkdir($directorioSubida, 0777, true);
+            }
+            $nombreArchivo = time() . "_" . basename($archivos['photo']['name']);
+            if (move_uploaded_file($archivos['photo']['tmp_name'], "{$directorioSubida}{$nombreArchivo}")) {
+                $photoToSave = $nombreArchivo;
+            }
+        }
+
+        mysqli_report(MYSQLI_REPORT_OFF);
+        $stmt = $this->connection->prepare(
+            "UPDATE users SET name=?, surname=?, mail=?, cellphone=?, username=?, password=?, photo=? WHERE id=?"
+        );
+        $stmt->bind_param(
+            "sssssssi",
+            $datos['name'],
+            $datos['surname'],
+            $datos['mail'],
+            $datos['cellphone'],
+            $datos['username'],
+            $passwordToSave,
+            $photoToSave,
+            $id
+        );
+
+        if ($stmt->execute()) {
+            $_SESSION['username'] = $datos['username'];
+            header("Location: /GlobalTicket/View/profile/perfilUser.php");
+            exit();
+        }
+
+        if ($this->connection->errno === 1062) {
+            header("Location: /GlobalTicket/View/profile/editProfileUser.php?error=email_exists");
+        } else {
+            header("Location: /GlobalTicket/View/profile/editProfileUser.php?error=db_error");
+        }
+        exit();
     }
 
     public function logout(): void
