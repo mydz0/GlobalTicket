@@ -439,7 +439,7 @@ a.card {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(180, 180, 180, 0.55);
+    background: rgba(0, 0, 0, 0.5);
     z-index: 490;
 }
 
@@ -451,47 +451,66 @@ a.card {
     left: 50%;
     transform: translate(-50%, -50%);
     width: 90%;
-    max-width: 500px;
+    max-width: 480px;
     background: var(--white);
-    padding: 44px 44px 36px;
+    padding: 40px 40px 32px;
     z-index: 500;
-    box-shadow: 0 8px 48px rgba(0,0,0,0.14);
+    box-shadow: 0 8px 48px rgba(0, 0, 0, 0.18);
     flex-direction: column;
+    font-family: var(--font-body);
 }
 
 .cookie-title {
     font-family: var(--font-body);
-    font-size: 22px;
+    font-size: 20px;
     font-weight: 700;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
+    color: var(--black);
 }
 
 #cookie-banner p {
     font-family: var(--font-body);
     font-size: 13px;
-    color: #222;
-    margin-top: 8px;
-    line-height: 1.5;
+    color: #444;
+    line-height: 1.6;
+    margin: 0;
 }
 
-.cookie-actions { display: flex; flex-direction: column; }
+.cookie-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+}
 
 .cookie-btn {
-    display: block;
-    width: 100%;
-    padding: 13px 20px;
-    background: var(--grey-light);
+    flex: 1;
+    padding: 12px 16px;
     font-family: var(--font-body);
     font-size: 13px;
-    font-weight: 500;
-    color: var(--black);
+    font-weight: 600;
     cursor: pointer;
-    border: none;
-    text-align: left;
-    margin-top: 14px;
-    transition: background 0.15s;
+    border: 2px solid var(--black);
+    transition: background 0.15s, color 0.15s;
 }
-.cookie-btn:hover { background: #bbb; }
+
+.cookie-btn-accept {
+    background: var(--black);
+    color: var(--white);
+}
+
+.cookie-btn-accept:hover {
+    background: var(--red);
+    border-color: var(--red);
+}
+
+.cookie-btn-reject {
+    background: var(--white);
+    color: var(--black);
+}
+
+.cookie-btn-reject:hover {
+    background: #f0f0f0;
+}
 
 /* ══ REVIEW COOKIES BUTTON ════════════════════ */
 #btn-review {

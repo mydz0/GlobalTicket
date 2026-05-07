@@ -54,7 +54,8 @@ class useController
                 }
             }
 
-            $passwordHash = $datos['password']; //quitar el encriptado de contraseña
+            //encriptación de contraseña
+            $passwordHash = password_hash($datos['password'], PASSWORD_DEFAULT);
 
             $sql = "INSERT INTO users (name, surname, mail, cellphone, username, password, photo)
                     VALUES (:name, :surname, :mail, :cellphone, :username, :password, :photo)";
@@ -97,6 +98,7 @@ class useController
             exit();
         }
 
+        //encriptación de contraseña
         $passwordHash = password_hash($datos['password'], PASSWORD_DEFAULT);
 
         $foto = null;
@@ -148,13 +150,12 @@ class useController
             $stmt = null;
 
             //comprobar que existe y que coincida la contraseña
-            if ($usuario && $datos['password'] === $usuario['password']) {
+            if ($usuario && password_verify($datos['password'],  $usuario['password'])) {
                 $_SESSION['user_id'] = $usuario['id'];
                 $_SESSION['username'] = $usuario['username'];
                 $_SESSION['role'] = $usuario['role'];
 
                 header("Location: ../profile/perfilUser.php");
-                // header("Location: /GlobalTicket/View/profile/perfilUser.php");
                 exit();
             } else {
 
