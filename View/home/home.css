@@ -417,3 +417,102 @@ a.card {
 
     .footer-inner { grid-template-columns: 1fr; gap: 24px; }
 }
+
+/* ══ COOKIE OVERLAY ═══════════════════════════ */
+#cookie-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(180, 180, 180, 0.55);
+    z-index: 490;
+}
+
+/* ══ COOKIE BANNER (modal) ════════════════════ */
+#cookie-banner {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 500px;
+    background: var(--white);
+    padding: 44px 44px 36px;
+    z-index: 500;
+    box-shadow: 0 8px 48px rgba(0,0,0,0.14);
+    flex-direction: column;
+}
+
+.cookie-title {
+    font-family: var(--font-body);
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+#cookie-banner p {
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: #222;
+    margin-top: 8px;
+    line-height: 1.5;
+}
+
+.cookie-actions { display: flex; flex-direction: column; }
+
+.cookie-btn {
+    display: block;
+    width: 100%;
+    padding: 13px 20px;
+    background: var(--grey-light);
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--black);
+    cursor: pointer;
+    border: none;
+    text-align: left;
+    margin-top: 14px;
+    transition: background 0.15s;
+}
+.cookie-btn:hover { background: #bbb; }
+
+/* ══ REVIEW COOKIES BUTTON ════════════════════ */
+#btn-review {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background: var(--black);
+    color: var(--white);
+    border: none;
+    padding: 8px 16px;
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    z-index: 998;
+    transition: background 0.2s;
+}
+#btn-review:hover { background: var(--red); }
+
+/* ══ HEADER LOGIN CTA ═════════════════════════ */
+.header-login-btn {
+    display: none;
+    padding: 8px 20px;
+    background: var(--black);
+    color: var(--white);
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+}
+.header-login-btn:hover {
+    background: var(--red);
+    color: var(--white);
+}
