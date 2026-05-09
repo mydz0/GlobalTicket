@@ -280,6 +280,88 @@ class useController
         exit();
     }
 
+    public function updateDisco(array $datos, array $archivos): void
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        if (!isset($_SESSION['user_id'])) {
+            header("Location: /GlobalTicket/View/login/login.php");
+            exit();
+        }
+
+        $id = $_SESSION['user_id'];
+
+        if (!filter_var($datos['mail'], FILTER_VALIDATE_EMAIL)) {
+            header("Location: /GlobalTicket/View/profile/editProfileDisco.php?error=email");
+            exit();
+        }
+
+        $stmt = $this->connection->prepare("SELECT password, photo FROM discographies WHERE id = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $current = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+
+        $newPassword     = trim($datos['password'] ?? '');
+        $confirmPassword = trim($datos['confirm-password'] ?? '');
+        $passwordToSave  = $current['password'];
+
+        if ($newPassword !== '') {
+            if ($newPassword !== $confirmPassword) {
+                header("Location: /GlobalTicket/View/profile/editProfileDisco.php?error=password");
+                exit();
+            }
+            $passwordToSave = password_hash($newPassword, PASSWORD_DEFAULT);
+        }
+
+        $photoToSave = $current['photo'];
+        if (isset($archivos['photo']) && $archivos['photo']['error'] === UPLOAD_ERR_OK) {
+            $allowed = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+            $ext = strtolower(pathinfo($archivos['photo']['name'], PATHINFO_EXTENSION));
+            if (!in_array($ext, $allowed)) {
+                header("Location: /GlobalTicket/View/profile/editProfileDisco.php?error=photo");
+                exit();
+            }
+            $directorioSubida = dirname(__FILE__) . "/../View/uploads/";
+            if (!is_dir($directorioSubida)) {
+                mkdir($directorioSubida, 0777, true);
+            }
+            $nombreArchivo = time() . "_" . basename($archivos['photo']['name']);
+            if (move_uploaded_file($archivos['photo']['tmp_name'], "{$directorioSubida}{$nombreArchivo}")) {
+                $photoToSave = $nombreArchivo;
+            }
+        }
+
+        mysqli_report(MYSQLI_REPORT_OFF);
+        $stmt = $this->connection->prepare(
+            "UPDATE discographies SET name=?, mail=?, cellphone=?, adress=?, password=?, photo=? WHERE id=?"
+        );
+        $stmt->bind_param(
+            "ssssssi",
+            $datos['name'],
+            $datos['mail'],
+            $datos['cellphone'],
+            $datos['adress'],
+            $passwordToSave,
+            $photoToSave,
+            $id
+        );
+
+        if ($stmt->execute()) {
+            header("Location: /GlobalTicket/View/profile/perfilDisco.php");
+            exit();
+        }
+
+        if ($this->connection->errno === 1062) {
+            header("Location: /GlobalTicket/View/profile/editProfileDisco.php?error=email_exists");
+        } else {
+            header("Location: /GlobalTicket/View/profile/editProfileDisco.php?error=db_error");
+        }
+        exit();
+    }
+
     public function logout(): void
     {
         session_start();
