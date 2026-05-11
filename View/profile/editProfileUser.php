@@ -99,7 +99,7 @@ $stmt->close();
                 <p style="color:red; margin-bottom:1rem;"><?= htmlspecialchars($error_msg) ?></p>
             <?php endif; ?>
 
-            <form class="edit-form" action="" method="post" enctype="multipart/form-data">
+            <form class="edit-form" action="/GlobalTicket/View/profile/editProfileUser.php" method="post" enctype="multipart/form-data">
                 <div class="edit-layout">
                     <div class="edit-fields">
 
