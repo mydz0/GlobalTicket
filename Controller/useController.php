@@ -10,6 +10,7 @@ class useController
      * @var
      */
 
+    // Cambios para poder utilizar las sentencias preparadas y asi mejorar la seguridad. 
     // Atributo privado: conexión a la BD
     private PDO $connection;
 
@@ -130,7 +131,7 @@ class useController
 
 
 
-    //  REGISTER  (req. 4.4 — nombre exacto del diagrama UML)
+    
     //  Decide si registrar usuario normal o discográfica según $_POST['type']
     public function login($datos): void
     {
@@ -204,7 +205,7 @@ class useController
         // Aqui le decimos donde guardarla la img 
         $directorio = __DIR__ . "/../uploads/";
 
-        // Y si no existe, lo crea 
+        //si no existe, lo crea con los permisos 0777 y el true para crear subdirectorios (si se necesita)
         if (!is_dir($directorio)) {
             mkdir($directorio, 0777, true);
         }
