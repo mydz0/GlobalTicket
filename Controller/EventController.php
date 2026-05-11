@@ -7,7 +7,7 @@ class EventController
 {
     private PDO $connection;
 
-    //CONSTRUCTOR: se conecta automaticamente a la base de datos 
+    //el contructor para conectarlo a la base de datos 
     public function __construct()
     {
 
