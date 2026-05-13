@@ -130,7 +130,7 @@ if (!$user) {
                 <div class="profile-info">
                     <h2 class="profile-name"><?= htmlspecialchars($user['name']) ?></h2>
                     <p><?= htmlspecialchars($user['cif']) ?></p>
-                    <a href="/View/login/editProfileDisco.html" class="profile-edit-btn">Edit profile</a>
+                    <a href="/GlobalTicket/View/profile/editProfileDisco.php" class="profile-edit-btn">Edit profile</a>
                 </div>
             </div>
 

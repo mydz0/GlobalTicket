@@ -32,6 +32,17 @@ CREATE TABLE IF NOT EXISTS discographies (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+-- Create Events Table --
+CREATE TABLE IF NOT EXISTS events (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(150) NOT NULL,
+    date DATETIME NOT NULL,
+    location VARCHAR(255) NOT NULL,
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
 -- Insert 5 Users
 INSERT INTO users (name, surname, mail, cellphone, username, password, role) VALUES
 ('John', 'Doe', 'john@example.com', '555-1001', 'jdoe', '123', 'user'),

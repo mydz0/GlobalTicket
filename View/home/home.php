@@ -13,72 +13,6 @@
         rel="stylesheet">
     <link rel="stylesheet" href="home.css">
     <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
-    <style>
-        #cookie-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 490;
-        }
-        #cookie-banner {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 90%;
-            max-width: 480px;
-            background: #fff;
-            padding: 40px 40px 32px;
-            z-index: 500;
-            box-shadow: 0 8px 48px rgba(0,0,0,0.18);
-            flex-direction: column;
-            font-family: 'DM Sans', sans-serif;
-        }
-        .cookie-title {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 12px;
-            color: #000;
-        }
-        #cookie-banner p {
-            font-size: 13px;
-            color: #444;
-            line-height: 1.6;
-            margin: 0;
-        }
-        .cookie-actions {
-            display: flex;
-            gap: 12px;
-            margin-top: 24px;
-        }
-        .cookie-btn {
-            flex: 1;
-            padding: 12px 16px;
-            font-family: 'DM Sans', sans-serif;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            border: 2px solid #000;
-            transition: background 0.15s, color 0.15s;
-        }
-        .cookie-btn-accept {
-            background: #000;
-            color: #fff;
-        }
-        .cookie-btn-accept:hover {
-            background: #ff2222;
-            border-color: #ff2222;
-        }
-        .cookie-btn-reject {
-            background: #fff;
-            color: #000;
-        }
-        .cookie-btn-reject:hover {
-            background: #f0f0f0;
-        }
-    </style>
 </head>
 
 <body>
@@ -129,7 +63,6 @@
             <img src="logo.svg" alt="Global Tickets" class="logo-img">
         </a>
 
-  
         <!-- Menu button – label toggles checkbox -->
         <label class="menu-btn" for="sidebar-toggle" aria-label="Open menu">
             <svg class="icon-hamburger" width="22" height="16" viewBox="0 0 22 16" fill="none">
@@ -150,18 +83,22 @@
         <div class="grid">
 
             <a class="card" href="../event/event.php">
-                <img src="wte.jpg" alt="Wave to Earth">
-                <div class="card-info">
-                    <p class="card-desc">Lorem ipsum dolor sit amet</p>
-                    <h3>Wave to Earth</h3>
+                <div class="card-img-wrap">
+                    <img src="wte.jpg" alt="Wave to Earth">
+                    <div class="card-info">
+                        <p class="card-desc">Lorem ipsum dolor sit amet</p>
+                        <h3>Wave to Earth</h3>
+                    </div>
                 </div>
             </a>
 
             <a class="card" href="../event/event.php">
-                <img src="rusowsky.webp" alt="Schoolgirl byebye">
-                <div class="card-info">
-                    <p class="card-desc">Lorem ipsum dolor sit amet</p>
-                    <h3>Schoolgirl byebye</h3>
+                <div class="card-img-wrap">
+                    <img src="rusowsky.webp" alt="Schoolgirl byebye">
+                    <div class="card-info">
+                        <p class="card-desc">Lorem ipsum dolor sit amet</p>
+                        <h3>Schoolgirl byebye</h3>
+                    </div>
                 </div>
             </a>
 
@@ -171,34 +108,42 @@
             </div>
 
             <a class="card" href="../event/event.php">
-                <img src="frankOcean.jpg" alt="Frank Ocean">
-                <div class="card-info">
-                    <p class="card-desc">Lorem ipsum dolor sit amet</p>
-                    <h3>Frank Ocean</h3>
+                <div class="card-img-wrap">
+                    <img src="frankOcean.jpg" alt="Frank Ocean">
+                    <div class="card-info">
+                        <p class="card-desc">Lorem ipsum dolor sit amet</p>
+                        <h3>Frank Ocean</h3>
+                    </div>
                 </div>
             </a>
 
             <a class="card" href="../event/event.php">
-                <img src="kaliUchis.webp" alt="Kali Uchis">
-                <div class="card-info">
-                    <p class="card-desc">Lorem ipsum dolor sit amet</p>
-                    <h3>Kali Uchis</h3>
+                <div class="card-img-wrap">
+                    <img src="kaliUchis.webp" alt="Kali Uchis">
+                    <div class="card-info">
+                        <p class="card-desc">Lorem ipsum dolor sit amet</p>
+                        <h3>Kali Uchis</h3>
+                    </div>
                 </div>
             </a>
 
             <a class="card" href="../event/event.php">
-                <img src="pinkpantheress2.webp" alt="PinkPanthress">
-                <div class="card-info">
-                    <p class="card-desc">Lorem ipsum dolor sit amet</p>
-                    <h3>PinkPanthress</h3>
+                <div class="card-img-wrap">
+                    <img src="pinkpantheress2.webp" alt="PinkPanthress">
+                    <div class="card-info">
+                        <p class="card-desc">Lorem ipsum dolor sit amet</p>
+                        <h3>PinkPanthress</h3>
+                    </div>
                 </div>
             </a>
 
             <a class="card" href="../event/event.php">
-                <img src="charliXCX.webp" alt="Charli XCX">
-                <div class="card-info">
-                    <p class="card-desc">Lorem ipsum dolor sit amet</p>
-                    <h3>Charli XCX</h3>
+                <div class="card-img-wrap">
+                    <img src="charliXCX.webp" alt="Charli XCX">
+                    <div class="card-info">
+                        <p class="card-desc">Lorem ipsum dolor sit amet</p>
+                        <h3>Charli XCX</h3>
+                    </div>
                 </div>
             </a>
 
@@ -251,23 +196,15 @@
         </div>
     </footer>
 
-    <!-- ── COOKIE OVERLAY ── -->
-    <div id="cookie-overlay"></div>
-
-    <!-- ── COOKIE BANNER ── -->
-    <div id="cookie-banner">
-        <h2 class="cookie-title">Cookie Policy</h2>
-        <p>We use cookies to improve your experience on our site. Do you accept the use of cookies?</p>
-        <div class="cookie-actions">
-            <button id="btn-accept" class="cookie-btn cookie-btn-accept">Accept</button>
-            <button id="btn-reject" class="cookie-btn cookie-btn-reject">Reject</button>
-        </div>
-    </div>
-
-    <!-- ── REVIEW COOKIES BUTTON ── -->
-    <button id="btn-review">Cookie settings</button>
-
-    <script src="home.js"></script>
+    <script>
+        function updateCountdown() {
+            const el = document.getElementById('countdown');
+            let [h, m, s] = el.textContent.split(':').map(Number);
+            if (--s < 0) { s = 59; if (--m < 0) { m = 59; if (--h < 0) h = m = s = 0; } }
+            el.textContent = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+        }
+        setInterval(updateCountdown, 1000);
+    </script>
 </body>
 
 </html>
