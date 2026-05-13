@@ -1,11 +1,38 @@
 <?php
 session_start();
 
-//redirigir directamente al log in si este no está logueado
 if (!isset($_SESSION['user_id'])) {
     header("Location: ../login/login.php");
     exit();
 }
+
+require_once '../../Controller/useController.php';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $controlador = new useController();
+    $controlador->updateUser($_POST, $_FILES);
+}
+
+$error_msg = '';
+if (isset($_GET['error'])) {
+    $errors = [
+        'email'        => 'Please enter a valid email address',
+        'username'     => 'Username must be at least 3 characters (letters, numbers and _)',
+        'password'     => 'Passwords do not match',
+        'photo'        => 'Invalid file type. Allowed: jpg, jpeg, png, webp, gif',
+        'email_exists' => 'That email or username is already in use',
+        'db_error'     => 'Could not save changes, please try again',
+    ];
+    $error_msg = $errors[$_GET['error']] ?? 'Unknown error';
+}
+
+require_once '../../Model/db.php';
+$db   = Database::getInstance()->getConexion();
+$stmt = $db->prepare("SELECT name, surname, mail, cellphone, username, photo FROM users WHERE id = ?");
+$stmt->bind_param("i", $_SESSION['user_id']);
+$stmt->execute();
+$user = $stmt->get_result()->fetch_assoc();
+$stmt->close();
 ?>
 
 <!DOCTYPE html>
@@ -67,50 +94,69 @@ if (!isset($_SESSION['user_id'])) {
     <main class="edit-main">
         <div class="edit-container">
             <h1 class="edit-title">Edit profile</h1>
-            <form class="edit-form" action="profile-user.html" method="get">
+
+            <?php if ($error_msg): ?>
+                <p style="color:red; margin-bottom:1rem;"><?= htmlspecialchars($error_msg) ?></p>
+            <?php endif; ?>
+
+            <form class="edit-form" action="/GlobalTicket/View/profile/editProfileUser.php" method="post" enctype="multipart/form-data">
                 <div class="edit-layout">
                     <div class="edit-fields">
 
                         <div class="field-group">
                             <label class="field-label" for="name">Name</label>
-                            <input class="field-input" type="text" id="name" required placeholder=" ">
+                            <input class="field-input" type="text" id="name" name="name" required placeholder=" "
+                                value="<?= htmlspecialchars($user['name']) ?>">
                             <span class="field-error">Please provide a name</span>
                         </div>
                         <div class="field-group">
                             <label class="field-label" for="surname">Surname</label>
-                            <input class="field-input" type="text" id="surname" required placeholder=" ">
+                            <input class="field-input" type="text" id="surname" name="surname" required placeholder=" "
+                                value="<?= htmlspecialchars($user['surname']) ?>">
                             <span class="field-error">Please provide a surname</span>
                         </div>
                         <div class="field-group">
                             <label class="field-label" for="mail">Mail</label>
-                            <input class="field-input" type="email" id="mail" required placeholder=" ">
-                            <span class="field-error">Please enter a valid email adress</span>
+                            <input class="field-input" type="email" id="mail" name="mail" required placeholder=" "
+                                value="<?= htmlspecialchars($user['mail']) ?>">
+                            <span class="field-error">Please enter a valid email address</span>
                         </div>
                         <div class="field-group">
                             <label class="field-label" for="cellphone">Cellphone</label>
-                            <input class="field-input" type="tel" id="cellphone" required pattern="[0-9+\s\-]{7,15}" placeholder=" ">
+                            <input class="field-input" type="tel" id="cellphone" name="cellphone" required
+                                pattern="[0-9+\s\-]{7,15}" placeholder=" "
+                                value="<?= htmlspecialchars($user['cellphone'] ?? '') ?>">
                             <span class="field-error">Please enter a phone number</span>
                         </div>
                         <div class="field-group">
                             <label class="field-label" for="username">Username</label>
-                            <input class="field-input" type="text" id="username" required minlength="3" pattern="[a-zA-Z0-9_]{3,}" placeholder=" ">
+                            <input class="field-input" type="text" id="username" name="username" required
+                                minlength="3" pattern="[a-zA-Z0-9_]{3,}" placeholder=" "
+                                value="<?= htmlspecialchars($user['username']) ?>">
                             <span class="field-error">Username not valid</span>
                         </div>
                         <div class="field-group">
-                            <label class="field-label" for="password">Password</label>
-                            <input class="field-input" type="password" id="password" required minlength="6" placeholder=" ">
+                            <label class="field-label" for="password">New password</label>
+                            <input class="field-input" type="password" id="password" name="password"
+                                minlength="6" placeholder=" ">
                         </div>
                         <div class="field-group">
-                            <label class="field-label" for="confirm">Confirm password</label>
-                            <input class="field-input" type="password" id="confirm" required minlength="6" placeholder=" ">
+                            <label class="field-label" for="confirm">Confirm new password</label>
+                            <input class="field-input" type="password" id="confirm" name="confirm-password"
+                                minlength="6" placeholder=" ">
                             <span class="field-error">Password doesn't match</span>
                         </div>
 
                     </div>
                     <div class="edit-photo">
                         <label class="photo-upload-circle" for="photo-input">
-                            <span class="photo-plus">+</span>
-                            <input type="file" id="photo-input" accept="image/*" hidden>
+                            <?php if (!empty($user['photo'])): ?>
+                                <img src="/GlobalTicket/View/uploads/<?= htmlspecialchars($user['photo']) ?>"
+                                    alt="Profile photo" class="avatar-img">
+                            <?php else: ?>
+                                <span class="photo-plus">+</span>
+                            <?php endif; ?>
+                            <input type="file" id="photo-input" name="photo" accept="image/*" hidden>
                         </label>
                         <p class="photo-label">Add photo</p>
                     </div>
@@ -125,7 +171,7 @@ if (!isset($_SESSION['user_id'])) {
 
     <footer class="footer">
         <div class="footer-inner">
-            <div class="footer-logo-wrap"><img src="/View/home/logo.svg" alt="Global Tickets" class="logo-img"></div>
+            <div class="footer-logo-wrap"><img src="../home/logo.svg" alt="Global Tickets" class="logo-img"></div>
             <div class="footer-col">
                 <h4>Instagram</h4>
                 <p>@globaltickets</p>
