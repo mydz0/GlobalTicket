@@ -53,13 +53,13 @@ classDiagram
         -usuario: string
         -password: string
         -baseDatos: string
-        -conexion: mysqli
+        -conexion: PDO
         +getInstance(): Database
-        +getConexion(): mysqli
+        +getConexion(): PDO
     }
     
     class useController {
-        -connection: mysqli
+        -connection: PDO
         +__construct()
         +register(datos, archivos): void
         +login(datos): void

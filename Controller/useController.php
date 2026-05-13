@@ -7,89 +7,85 @@ class useController
 
     /*
      * /
-     * @var 
+     * @var
      */
 
+    // Cambios para poder utilizar las sentencias preparadas y asi mejorar la seguridad. 
     // Atributo privado: conexión a la BD
-    private mysqli $connection;
+    private PDO $connection;
 
     public function __construct()
     {
-        // Obtenemos la conexión mysqli desde el Singleton de db.php
         $this->connection = Database::getInstance()->getConexion();
     }
 
+    // REGISTRO USUARIO: 
     public function register($datos, $archivos): void
     {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') return; {
 
-        //para ver que las contraseñas coincidan
-        if ($datos['password'] !== $datos['confirm-password']) {
-            //ponemos el error por la ruta porque no deja poner return (usamoos el header)
-            header("Location: registerUser.php?error=password");
-            exit();
-        }
-
-        //validacion formato mail
-        if (!filter_var($datos['mail'], FILTER_VALIDATE_EMAIL)) {
-            header("Location: registerUser.php?error=email");
-            exit();
-        }
-
-        //vañidacion username min 3 caracteres y solo letras, numeros y underdash
-        if (!preg_match('/^[a-zA-Z0-9_]{3,}$/', $datos['username'])) {
-            header("Location: registerUser.php?error=username");
-            exit();
-        }
-
-        //la foto: 
-        if (isset($archivos['photo']) && $archivos['photo']['error'] === UPLOAD_ERR_OK) {
-
-            //creamos la carpeta para las fotos:
-            $directorioSubida = "../../uploads/"; //la ruta donde se guarda la img
-
-            if (!is_dir($directorioSubida)) {
-                mkdir($directorioSubida, 0777, true);
+            //validación
+            if (empty($datos['username']) || empty($datos['password']) || empty($datos['mail'])) {
+                header("Location: registerUser.php?error=empty");
+                exit();
             }
 
-            //el nom del archivo y donde lo guardamos:
-            $nombreArchivo = time() . "_" . basename($archivos['photo']['name']);
-            $rutaFinal = $directorioSubida . $nombreArchivo;
+            //para ver que las contraseñas coincidan
+            if ($datos['password'] !== $datos['confirm-password']) {
+                header("Location: registerUser.php?error=password");
+                exit();
+            }
 
-            if (move_uploaded_file($archivos['photo']['tmp_name'], $rutaFinal)) {
+            //validacion formato mail
+            if (!filter_var($datos['mail'], FILTER_VALIDATE_EMAIL)) {
+                header("Location: registerUser.php?error=email");
+                exit();
+            }
 
-                //cuando tengamos la base de datos esto lo deberiamos de cambiar, se guardaría en una variable
-                error_log("Foto subida con exito a: " . $rutaFinal);
+            //validacion username min 3 caracteres y solo letras, numeros y underdash
+            if (!preg_match('/^[a-zA-Z0-9_]{3,}$/', $datos['username'])) {
+                header("Location: registerUser.php?error=username");
+                exit();
+            }
+
+            //FOTO:
+            $foto = $this->subirFoto($archivos);
+
+            //encriptación de contraseña
+            $passwordHash = password_hash($datos['password'], PASSWORD_DEFAULT);
+
+            $sql = "INSERT INTO users (name, surname, mail, cellphone, username, password, photo)
+                    VALUES (:name, :surname, :mail, :cellphone, :username, :password, :photo)";
+
+            $stmt = $this->connection->prepare($sql);
+
+            try {
+                $stmt->execute([
+                    ':name'      => $datos['name'] ?? null,
+                    ':surname'   => $datos['surname'] ?? null,
+                    ':mail'      => $datos['mail'],
+                    ':cellphone' => $datos['cellphone'] ?? null,
+                    ':username'  => $datos['username'],
+                    ':password'  => $passwordHash,
+                    ':photo'     => $foto,
+                ]);
+
+                header("Location: /GlobalTicket/View/home/home.php");
+                exit();
+
+            } catch (PDOException $e) {
+                if ($e->getCode() === '23000') {
+                    header("Location: registerUser.php?error=email_exists");
+                } else {
+                    header("Location: registerUser.php?error=db_error");
+                }
+                exit();
             }
         }
-
-        //insertar usuario en la base de datos
-        //crear contraseña antes de guardar
-        $passwordHash = $datos['password']; //quitar el encriptado de contraseña
-
-        //nombre de la foto (null si no hay foto)
-        $foto = isset($nombreArchivo) ? $nombreArchivo : null;
-
-        //prepared statement evitar sql injection
-        $stmt = $this->connection->prepare("INSERT INTO users (name, surname, mail, cellphone, username, password, photo) VALUES (?, ?, ?, ?, ?, ?, ?)");
-
-        $stmt->bind_param("sssssss", $datos['name'], $datos['surname'], $datos['mail'], $datos['cellphone'], $datos['username'], $passwordHash, $foto);
-
-        mysqli_report(MYSQLI_REPORT_OFF);
-
-        if ($stmt->execute()) {
-            header("Location: .../View/home/home.php");
-            exit();
-        } // Si falla (por ejemplo, email duplicado)
-        if ($this->connection->errno === 1062) {
-            header("Location: registerUser.php?error=email_exists");
-        } else {
-            header("Location: registerUser.php?error=db_error");
-        }
-        exit();
     }
 
 
-
+    // REGISTRO DISCO:
     public function registerDisco($datos, $archivos): void
     {
         if ($datos['password'] !== $datos['confirm-password']) {
@@ -102,272 +98,126 @@ class useController
             exit();
         }
 
+        //Subir foto:
+        $foto = $this->subirFoto($archivos);
+
+        //encriptación de contraseña
         $passwordHash = password_hash($datos['password'], PASSWORD_DEFAULT);
 
-        $foto = null;
-        if (isset($archivos['photo']) && $archivos['photo']['error'] === UPLOAD_ERR_OK) {
-            $directorioUploads = "../../uploads/";
-            if (!is_dir($directorioUploads)) mkdir($directorioUploads, 0777, true);
-            $fileName = time() . "_" . basename($archivos['photo']['name']);
-            $rutaFinal = $directorioUploads . $fileName;
-            if (move_uploaded_file($archivos['photo']['tmp_name'], $rutaFinal)) {
-                $foto = $fileName;
-            }
-        }
+        $sql = "INSERT INTO discographies (name, cif, mail, cellphone, adress, password, photo, role)
+                VALUES (:name, :cif, :mail, :cellphone, :adress, :password, :photo, 'disco')";
 
-        $stmt = $this->connection->prepare("INSERT INTO discographies (name, cif, mail, cellphone, adress, password, photo, role)
-         VALUES (?, ?, ?, ?, ?, ?, ?, 'disco')");
+        $stmt = $this->connection->prepare($sql);
 
-        $stmt->bind_param(
-            "sssssss",
-            $datos['name'],
-            $datos['cif'],
-            $datos['mail'],
-            $datos['cellphone'],
-            $datos['adress'],
-            $passwordHash,
-            $foto
-        );
+        try {
+            $stmt->execute([
+                ':name'      => $datos['name'],
+                ':cif'       => $datos['cif'],
+                ':mail'      => $datos['mail'],
+                ':cellphone' => $datos['cellphone'],
+                ':adress'    => $datos['adress'],
+                ':password'  => $passwordHash,
+                ':photo'     => $foto,
+            ]);
 
-        if ($stmt->execute()) {
             header("Location: /GlobalTicket/View/home/home.php");
             exit();
-        } else {
+
+        } catch (PDOException) {
             header("Location: /GlobalTicket/View/signIn/discography/discoSignIn.php?error=error_registro");
             exit();
         }
-        $stmt->close();
     }
 
 
 
-    //  REGISTER  (req. 4.4 — nombre exacto del diagrama UML)
+    
     //  Decide si registrar usuario normal o discográfica según $_POST['type']
     public function login($datos): void
     {
 
         session_start();
         if ($datos['tipo'] === 'user') {
+
             //buscar usuario por username
-            $stmt = $this->connection->prepare("SELECT id, username, password, role FROM users WHERE username = ? "); //and password = ? quitar para q la contraseña encriptada pueda comprobar
-            $stmt->bind_param("s", $datos['username']); //ya solo se pasa un parametro 
-            $stmt->execute();
-            $usuario = $stmt->get_result()->fetch_assoc();
-            $stmt->close();
+            $sql = "SELECT id, username, password, role FROM users WHERE username = :username";
+            $stmt = $this->connection->prepare($sql); //and password = ? quitar para q la contraseña encriptada pueda comprobar
+            $stmt->execute([': username' => $datos['username']]);
+
+            $usuario = $stmt->fetch();
 
             //comprobar que existe y que coincida la contraseña
-            if ($usuario && password_verify($datos['password'], $usuario['password'])) {
+            if ($usuario && password_verify($datos['password'],  $usuario['password'])) {
                 $_SESSION['user_id'] = $usuario['id'];
                 $_SESSION['username'] = $usuario['username'];
                 $_SESSION['role'] = $usuario['role'];
 
                 header("Location: ../profile/perfilUser.php");
-                // header("Location: /GlobalTicket/View/profile/perfilUser.php");
                 exit();
+
             } else {
 
-                header("Location: ../login/login.php?error=credenciales");
-                exit();
-            }
-        } else {
-            //buscar discografia por cif
-            $stmt = $this->connection->prepare("SELECT id, name, password, role FROM discographies WHERE cif = ?");
-            $stmt->bind_param("s", $datos['cif']);
-            $stmt->execute();
-            $disco = $stmt->get_result()->fetch_assoc();
-            $stmt->close();
+                $sql = "SELECT id, name, password, role FROM discographies WHERE cif = :cif";
+                $stmt = $this->connection->prepare($sql);
+                $stmt->execute([':cif' => $datos['cif']]);
 
-            if ($disco && password_verify($datos['password'], $disco['password'])) {
+                $disco = $stmt ->fetch();
+                
+                if ($disco && password_verify($datos['password'], $disco['password'])) {
                 $_SESSION['user_id'] = $disco['id'];
                 $_SESSION['username'] = $disco['name'];
                 $_SESSION['role'] = $disco['role'];
-                header("Location: ../profile/perfilDisco.php");
-                exit();
-            } else {
+
                 header("Location: ../login/login.php?error=credenciales");
                 exit();
             }
-        }
-    }
 
-    public function updateUser(array $datos, array $archivos): void
-    {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
+
+        } 
         }
 
-        if (!isset($_SESSION['user_id'])) {
-            header("Location: /GlobalTicket/View/login/login.php");
-            exit();
-        }
-
-        $id = $_SESSION['user_id'];
-
-        if (!filter_var($datos['mail'], FILTER_VALIDATE_EMAIL)) {
-            header("Location: /GlobalTicket/View/profile/editProfileUser.php?error=email");
-            exit();
-        }
-
-        if (!preg_match('/^[a-zA-Z0-9_]{3,}$/', $datos['username'])) {
-            header("Location: /GlobalTicket/View/profile/editProfileUser.php?error=username");
-            exit();
-        }
-
-        // Obtener contraseña y foto actuales para conservarlas si no se cambian
-        $stmt = $this->connection->prepare("SELECT password, photo FROM users WHERE id = ?");
-        $stmt->bind_param("i", $id);
-        $stmt->execute();
-        $current = $stmt->get_result()->fetch_assoc();
-        $stmt->close();
-
-        $newPassword    = trim($datos['password'] ?? '');
-        $confirmPassword = trim($datos['confirm-password'] ?? '');
-        $passwordToSave = $current['password'];
-
-        if ($newPassword !== '') {
-            if ($newPassword !== $confirmPassword) {
-                header("Location: /GlobalTicket/View/profile/editProfileUser.php?error=password");
-                exit();
-            }
-            $passwordToSave = password_hash($newPassword, PASSWORD_DEFAULT);
-        }
-
-        $photoToSave = $current['photo'];
-        if (isset($archivos['photo']) && $archivos['photo']['error'] === UPLOAD_ERR_OK) {
-            $allowed = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
-            $ext = strtolower(pathinfo($archivos['photo']['name'], PATHINFO_EXTENSION));
-            if (!in_array($ext, $allowed)) {
-                header("Location: /GlobalTicket/View/profile/editProfileUser.php?error=photo");
-                exit();
-            }
-            $directorioSubida = dirname(__FILE__) . "/../View/uploads/";
-            if (!is_dir($directorioSubida)) {
-                mkdir($directorioSubida, 0777, true);
-            }
-            $nombreArchivo = time() . "_" . basename($archivos['photo']['name']);
-            if (move_uploaded_file($archivos['photo']['tmp_name'], "{$directorioSubida}{$nombreArchivo}")) {
-                $photoToSave = $nombreArchivo;
-            }
-        }
-
-        mysqli_report(MYSQLI_REPORT_OFF);
-        $stmt = $this->connection->prepare(
-            "UPDATE users SET name=?, surname=?, mail=?, cellphone=?, username=?, password=?, photo=? WHERE id=?"
-        );
-        $stmt->bind_param(
-            "sssssssi",
-            $datos['name'],
-            $datos['surname'],
-            $datos['mail'],
-            $datos['cellphone'],
-            $datos['username'],
-            $passwordToSave,
-            $photoToSave,
-            $id
-        );
-
-        if ($stmt->execute()) {
-            $_SESSION['username'] = $datos['username'];
-            header("Location: /GlobalTicket/View/profile/perfilUser.php");
-            exit();
-        }
-
-        if ($this->connection->errno === 1062) {
-            header("Location: /GlobalTicket/View/profile/editProfileUser.php?error=email_exists");
-        } else {
-            header("Location: /GlobalTicket/View/profile/editProfileUser.php?error=db_error");
-        }
+        header("Location: ../login/login.php?error=credenciales");
         exit();
     }
 
-    public function updateDisco(array $datos, array $archivos): void
-    {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-
-        if (!isset($_SESSION['user_id'])) {
-            header("Location: /GlobalTicket/View/login/login.php");
-            exit();
-        }
-
-        $id = $_SESSION['user_id'];
-
-        if (!filter_var($datos['mail'], FILTER_VALIDATE_EMAIL)) {
-            header("Location: /GlobalTicket/View/profile/editProfileDisco.php?error=email");
-            exit();
-        }
-
-        $stmt = $this->connection->prepare("SELECT password, photo FROM discographies WHERE id = ?");
-        $stmt->bind_param("i", $id);
-        $stmt->execute();
-        $current = $stmt->get_result()->fetch_assoc();
-        $stmt->close();
-
-        $newPassword     = trim($datos['password'] ?? '');
-        $confirmPassword = trim($datos['confirm-password'] ?? '');
-        $passwordToSave  = $current['password'];
-
-        if ($newPassword !== '') {
-            if ($newPassword !== $confirmPassword) {
-                header("Location: /GlobalTicket/View/profile/editProfileDisco.php?error=password");
-                exit();
-            }
-            $passwordToSave = password_hash($newPassword, PASSWORD_DEFAULT);
-        }
-
-        $photoToSave = $current['photo'];
-        if (isset($archivos['photo']) && $archivos['photo']['error'] === UPLOAD_ERR_OK) {
-            $allowed = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
-            $ext = strtolower(pathinfo($archivos['photo']['name'], PATHINFO_EXTENSION));
-            if (!in_array($ext, $allowed)) {
-                header("Location: /GlobalTicket/View/profile/editProfileDisco.php?error=photo");
-                exit();
-            }
-            $directorioSubida = dirname(__FILE__) . "/../View/uploads/";
-            if (!is_dir($directorioSubida)) {
-                mkdir($directorioSubida, 0777, true);
-            }
-            $nombreArchivo = time() . "_" . basename($archivos['photo']['name']);
-            if (move_uploaded_file($archivos['photo']['tmp_name'], "{$directorioSubida}{$nombreArchivo}")) {
-                $photoToSave = $nombreArchivo;
-            }
-        }
-
-        mysqli_report(MYSQLI_REPORT_OFF);
-        $stmt = $this->connection->prepare(
-            "UPDATE discographies SET name=?, mail=?, cellphone=?, adress=?, password=?, photo=? WHERE id=?"
-        );
-        $stmt->bind_param(
-            "ssssssi",
-            $datos['name'],
-            $datos['mail'],
-            $datos['cellphone'],
-            $datos['adress'],
-            $passwordToSave,
-            $photoToSave,
-            $id
-        );
-
-        if ($stmt->execute()) {
-            header("Location: /GlobalTicket/View/profile/perfilDisco.php");
-            exit();
-        }
-
-        if ($this->connection->errno === 1062) {
-            header("Location: /GlobalTicket/View/profile/editProfileDisco.php?error=email_exists");
-        } else {
-            header("Location: /GlobalTicket/View/profile/editProfileDisco.php?error=db_error");
-        }
-        exit();
-    }
 
     public function logout(): void
     {
         session_start();
         session_unset();
         session_destroy();
+
         header("Location: /GlobalTicket/View/login/login.php");
         exit();
+
+    }
+
+
+    // Para subir una img al servidor y que devuelva el nom del archivo 
+    // recibe el array de archivo, el $_FILES
+    private function subirFoto($archivos): ?string {
+
+        // esto comprubea si existe el archivo
+        if (!isset($archivos['photo']) || $archivos['photo']['error'] !== UPLOAD_ERR_OK) {
+            return null;
+        }
+
+        // Aqui le decimos donde guardarla la img 
+        $directorio = __DIR__ . "/../uploads/";
+
+        //si no existe, lo crea con los permisos 0777 y el true para crear subdirectorios (si se necesita)
+        if (!is_dir($directorio)) {
+            mkdir($directorio, 0777, true);
+        }
+
+        $nombre = time() . "_" . basename($archivos['photo']['name']);
+        $ruta = $directorio . $nombre;
+
+        if (move_uploaded_file($archivos['photo']['tmp_name'], $ruta)) {
+            return $nombre;
+        }
+
+        return null;
+        
     }
 }

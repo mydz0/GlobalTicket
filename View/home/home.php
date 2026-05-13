@@ -12,6 +12,7 @@
         href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="home.css">
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 </head>
 
 <body>
@@ -82,18 +83,22 @@
         <div class="grid">
 
             <a class="card" href="../event/event.php">
-                <img src="wte.jpg" alt="Wave to Earth">
-                <div class="card-info">
-                    <p class="card-desc">Lorem ipsum dolor sit amet</p>
-                    <h3>Wave to Earth</h3>
+                <div class="card-img-wrap">
+                    <img src="wte.jpg" alt="Wave to Earth">
+                    <div class="card-info">
+                        <p class="card-desc">Lorem ipsum dolor sit amet</p>
+                        <h3>Wave to Earth</h3>
+                    </div>
                 </div>
             </a>
 
             <a class="card" href="../event/event.php">
-                <img src="rusowsky.webp" alt="Schoolgirl byebye">
-                <div class="card-info">
-                    <p class="card-desc">Lorem ipsum dolor sit amet</p>
-                    <h3>Schoolgirl byebye</h3>
+                <div class="card-img-wrap">
+                    <img src="rusowsky.webp" alt="Schoolgirl byebye">
+                    <div class="card-info">
+                        <p class="card-desc">Lorem ipsum dolor sit amet</p>
+                        <h3>Schoolgirl byebye</h3>
+                    </div>
                 </div>
             </a>
 
@@ -103,34 +108,42 @@
             </div>
 
             <a class="card" href="../event/event.php">
-                <img src="frankOcean.jpg" alt="Frank Ocean">
-                <div class="card-info">
-                    <p class="card-desc">Lorem ipsum dolor sit amet</p>
-                    <h3>Frank Ocean</h3>
+                <div class="card-img-wrap">
+                    <img src="frankOcean.jpg" alt="Frank Ocean">
+                    <div class="card-info">
+                        <p class="card-desc">Lorem ipsum dolor sit amet</p>
+                        <h3>Frank Ocean</h3>
+                    </div>
                 </div>
             </a>
 
             <a class="card" href="../event/event.php">
-                <img src="kaliUchis.webp" alt="Kali Uchis">
-                <div class="card-info">
-                    <p class="card-desc">Lorem ipsum dolor sit amet</p>
-                    <h3>Kali Uchis</h3>
+                <div class="card-img-wrap">
+                    <img src="kaliUchis.webp" alt="Kali Uchis">
+                    <div class="card-info">
+                        <p class="card-desc">Lorem ipsum dolor sit amet</p>
+                        <h3>Kali Uchis</h3>
+                    </div>
                 </div>
             </a>
 
             <a class="card" href="../event/event.php">
-                <img src="pinkpantheress2.webp" alt="PinkPanthress">
-                <div class="card-info">
-                    <p class="card-desc">Lorem ipsum dolor sit amet</p>
-                    <h3>PinkPanthress</h3>
+                <div class="card-img-wrap">
+                    <img src="pinkpantheress2.webp" alt="PinkPanthress">
+                    <div class="card-info">
+                        <p class="card-desc">Lorem ipsum dolor sit amet</p>
+                        <h3>PinkPanthress</h3>
+                    </div>
                 </div>
             </a>
 
             <a class="card" href="../event/event.php">
-                <img src="charliXCX.webp" alt="Charli XCX">
-                <div class="card-info">
-                    <p class="card-desc">Lorem ipsum dolor sit amet</p>
-                    <h3>Charli XCX</h3>
+                <div class="card-img-wrap">
+                    <img src="charliXCX.webp" alt="Charli XCX">
+                    <div class="card-info">
+                        <p class="card-desc">Lorem ipsum dolor sit amet</p>
+                        <h3>Charli XCX</h3>
+                    </div>
                 </div>
             </a>
 
