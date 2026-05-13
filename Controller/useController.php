@@ -142,7 +142,7 @@ class useController
             //buscar usuario por username
             $sql = "SELECT id, username, password, role FROM users WHERE username = :username";
             $stmt = $this->connection->prepare($sql); //and password = ? quitar para q la contraseña encriptada pueda comprobar
-            $stmt->execute([': username' => $datos['username']]);
+            $stmt->execute(['username' => $datos['username']]);
 
             $usuario = $stmt->fetch();
 
