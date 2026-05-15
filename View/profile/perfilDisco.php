@@ -8,7 +8,8 @@ if (!isset($_SESSION['user_id'])) {
 
 require_once '../../Model/db.php';
 $db = Database::getInstance()->getConexion();
-$stmt = $db->prepare("SELECT name, cif FROM discographies WHERE id = ?");
+
+$stmt = $db->prepare("SELECT name, cif, photo FROM discographies WHERE id = ?");
 $stmt->execute([$_SESSION['user_id']]);
 $user = $stmt->fetch();
 $stmt = null;
@@ -18,8 +19,19 @@ if (!$user) {
     exit();
 }
 
-?>
+// My events
+$stmtEv = $db->prepare(
+    "SELECT id, name, date, location, artist, price, image
+     FROM events
+     WHERE discography_id = ?
+     ORDER BY date ASC"
+);
+$stmtEv->execute([$_SESSION['user_id']]);
+$myEvents = $stmtEv->fetchAll();
+$stmtEv = null;
 
+$success = $_GET['success'] ?? '';
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -65,15 +77,13 @@ if (!$user) {
         <nav class="sidebar-nav">
             <?php if (isset($_SESSION['user_id'])): ?>
                 <a href="/GlobalTicket/View/profile/perfilDisco.php">Profile</a>
-                <a href="#">Favoritos</a>
-                <a href="#">Eventos</a>
+                <a href="/GlobalTicket/View/map/map.php">Map</a>
                 <a href="/GlobalTicket/Controller/logout.php">Log out</a>
             <?php else: ?>
                 <a href="/GlobalTicket/View/signIn/signin.php">Sign in</a>
                 <a href="/GlobalTicket/View/login/login.php">Log in</a>
             <?php endif; ?>
         </nav>
-
     </aside>
 
     <!-- ── PROFILE SIDEBAR (purple) ── -->
@@ -96,8 +106,8 @@ if (!$user) {
             <input class="profile-sidebar-input" type="text" placeholder="">
         </div>
         <nav class="profile-sidebar-nav">
-            <a href="#">Favoritos</a>
-            <a href="#">Eventos</a>
+            <a href="/GlobalTicket/View/map/map.php">Map</a>
+            <a href="/GlobalTicket/View/event/addEvent.php">Add event</a>
             <a href="/GlobalTicket/Controller/logout.php">Log out</a>
         </nav>
     </aside>
@@ -120,24 +130,73 @@ if (!$user) {
     <main class="profile-main">
         <div class="profile-container">
 
-            <h1 class="profile-title">Profile</h1>
+            <?php if ($success === 'event_created'): ?>
+                <div class="flash-success">Event created successfully!</div>
+            <?php endif; ?>
 
-            <!-- Profile card -->
-            <div class="profile-card">
-                <div class="avatar-circle">
-                    <span class="avatar-plus">+</span>
+            <!-- Profile banner -->
+            <div class="profile-banner">
+                <div class="profile-banner-avatar">
+                    <?php if (!empty($user['photo'])): ?>
+                        <img src="/GlobalTicket/uploads/<?= htmlspecialchars($user['photo']) ?>" alt="Profile photo" class="avatar-img">
+                    <?php else: ?>
+                        <span class="avatar-plus">+</span>
+                    <?php endif; ?>
                 </div>
-                <div class="profile-info">
-                    <h2 class="profile-name"><?= htmlspecialchars($user['name']) ?></h2>
-                    <p><?= htmlspecialchars($user['cif']) ?></p>
+                <div class="profile-banner-info">
+                    <h1 class="profile-banner-name"><?= htmlspecialchars($user['name']) ?></h1>
+                    <p class="profile-banner-username"><?= htmlspecialchars($user['cif']) ?></p>
                     <a href="/GlobalTicket/View/profile/editProfileDisco.php" class="profile-edit-btn">Edit profile</a>
+                </div>
+                <div class="profile-banner-stats">
+                    <div class="profile-stat">
+                        <span class="profile-stat-num"><?= count($myEvents) ?></span>
+                        <span class="profile-stat-label">events</span>
+                    </div>
                 </div>
             </div>
 
-            <!-- My artists -->
-            <section class="artists-section">
+            <!-- My Events -->
+            <section class="events-section">
                 <div class="artists-header">
-                    <h2 class="artists-title">My artists</h2>
+                    <h2 class="artists-title">MY EVENTS</h2>
+                    <a href="/GlobalTicket/View/event/addEvent.php" class="add-artist-btn">+ Add event</a>
+                </div>
+
+                <?php if (empty($myEvents)): ?>
+                    <p class="no-items-msg">No events yet. <a href="/GlobalTicket/View/event/addEvent.php">Add your first event.</a></p>
+                <?php else: ?>
+                    <div class="events-grid">
+                        <?php foreach ($myEvents as $ev): ?>
+                            <div class="event-card-disco">
+                                <?php if (!empty($ev['image'])): ?>
+                                    <img src="/GlobalTicket/uploads/events/<?= htmlspecialchars($ev['image']) ?>" alt="<?= htmlspecialchars($ev['name']) ?>" class="event-card-img">
+                                <?php else: ?>
+                                    <div class="event-card-img event-card-noimg">No image</div>
+                                <?php endif; ?>
+                                <div class="event-card-body">
+                                    <p class="event-card-name"><?= htmlspecialchars($ev['name']) ?></p>
+                                    <?php if (!empty($ev['artist'])): ?>
+                                        <p class="event-card-artist"><?= htmlspecialchars($ev['artist']) ?></p>
+                                    <?php endif; ?>
+                                    <p class="event-card-meta">
+                                        <?= htmlspecialchars(date('d M Y, H:i', strtotime($ev['date']))) ?>
+                                    </p>
+                                    <p class="event-card-meta"><?= htmlspecialchars($ev['location']) ?></p>
+                                    <p class="event-card-price">
+                                        <?= $ev['price'] > 0 ? '€' . number_format($ev['price'], 2) : 'Free' ?>
+                                    </p>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+            </section>
+
+            <!-- My Artists -->
+            <section class="artists-section" style="margin-top:48px">
+                <div class="artists-header">
+                    <h2 class="artists-title">MY ARTISTS</h2>
                     <a href="#" class="add-artist-btn">Add artist</a>
                 </div>
                 <div class="artists-grid">
@@ -190,32 +249,22 @@ if (!$user) {
                 <img src="../home/logo.svg" alt="Global Tickets" class="logo-img">
             </div>
             <div class="footer-col">
-                <h4>Instagram</h4>
-                <p>@globaltickets</p>
-                <h4>Email</h4>
-                <p>ticket@globaltickets</p>
-                <h4>Contact</h4>
-                <p>+30 111 111 111</p>
+                <h4>Instagram</h4><p>@globaltickets</p>
+                <h4>Email</h4><p>ticket@globaltickets</p>
+                <h4>Contact</h4><p>+30 111 111 111</p>
             </div>
             <div class="footer-col">
-                <h4>Instagram</h4>
-                <p>@globaltickets</p>
-                <h4>Email</h4>
-                <p>ticket@globaltickets</p>
-                <h4>Contact</h4>
-                <p>+30 111 111 111</p>
+                <h4>Instagram</h4><p>@globaltickets</p>
+                <h4>Email</h4><p>ticket@globaltickets</p>
+                <h4>Contact</h4><p>+30 111 111 111</p>
             </div>
             <div class="footer-col">
-                <h4>Instagram</h4>
-                <p>@globaltickets</p>
-                <h4>Email</h4>
-                <p>ticket@globaltickets</p>
-                <h4>Contact</h4>
-                <p>+30 111 111 111</p>
+                <h4>Instagram</h4><p>@globaltickets</p>
+                <h4>Email</h4><p>ticket@globaltickets</p>
+                <h4>Contact</h4><p>+30 111 111 111</p>
             </div>
         </div>
     </footer>
 
 </body>
-
 </html>

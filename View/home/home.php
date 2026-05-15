@@ -1,4 +1,33 @@
-<?php session_start(); ?>
+<?php
+session_start();
+require_once '../../Model/db.php';
+$db = Database::getInstance()->getConexion();
+
+$stmtCount = $db->query("SELECT COUNT(*) FROM events");
+$eventCount = (int)$stmtCount->fetchColumn();
+
+$stmtMapEvents = $db->query(
+    "SELECT id, name, date, location, artist, price, image, latitude, longitude
+     FROM events WHERE latitude IS NOT NULL AND longitude IS NOT NULL ORDER BY date ASC"
+);
+$mapEvents = $stmtMapEvents->fetchAll(PDO::FETCH_ASSOC);
+// Upcoming events for horizontal scroll (all, ordered by date)
+$stmtUpcoming = $db->query(
+    "SELECT id, name, date, location, artist, price FROM events ORDER BY date ASC LIMIT 8"
+);
+$upcomingEvents = $stmtUpcoming->fetchAll(PDO::FETCH_ASSOC);
+
+$mapEventsJson = json_encode(array_map(fn($e) => [
+    'name'     => $e['name'],
+    'artist'   => $e['artist'] ?? '',
+    'date'     => date('d M Y', strtotime($e['date'])),
+    'location' => $e['location'],
+    'price'    => $e['price'] > 0 ? '€'.number_format($e['price'],2) : 'Free',
+    'image'    => $e['image'] ? '/GlobalTicket/uploads/events/'.$e['image'] : '',
+    'lat'      => (float)$e['latitude'],
+    'lng'      => (float)$e['longitude'],
+], $mapEvents));
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,6 +40,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&display=swap"
         rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="home.css">
     <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 </head>
@@ -76,10 +106,48 @@
     <!-- ── HERO ── -->
     <section class="hero">
         <img src="theMarias.jpg" alt="The Marias" class="hero-img">
+        <div class="hero-overlay">
+            <p class="hero-eyebrow">Global Tickets</p>
+            <h1 class="hero-title">The best<br>live events</h1>
+            <p class="hero-cities">Barcelona &nbsp;·&nbsp; Madrid &nbsp;·&nbsp; London &nbsp;·&nbsp; Paris &nbsp;·&nbsp; Berlin</p>
+        </div>
     </section>
 
+    <!-- ── UPCOMING EVENTS (horizontal scroll) ── -->
+    <?php if (!empty($upcomingEvents)): ?>
+    <section class="upcoming-section reveal">
+        <div class="upcoming-head">
+            <h2 class="upcoming-title">UPCOMING</h2>
+            <a href="/GlobalTicket/View/map/map.php" class="upcoming-all">See all &rarr;</a>
+        </div>
+        <div class="upcoming-track">
+            <?php foreach ($upcomingEvents as $ev):
+                $month = strtoupper(date('M', strtotime($ev['date'])));
+                $day   = date('d',  strtotime($ev['date']));
+                $year  = date('Y',  strtotime($ev['date']));
+            ?>
+            <a href="../event/event.php" class="upcoming-card">
+                <div class="upcoming-date">
+                    <span class="upcoming-month"><?= $month ?></span>
+                    <span class="upcoming-day"><?= $day ?></span>
+                    <span class="upcoming-year"><?= $year ?></span>
+                </div>
+                <div class="upcoming-info">
+                    <p class="upcoming-artist"><?= htmlspecialchars($ev['artist'] ?: $ev['name']) ?></p>
+                    <p class="upcoming-event"><?= htmlspecialchars($ev['name']) ?></p>
+                    <p class="upcoming-loc"><?= htmlspecialchars($ev['location']) ?></p>
+                </div>
+                <p class="upcoming-price">
+                    <?= $ev['price'] > 0 ? '€'.number_format($ev['price'],2) : 'Free' ?>
+                </p>
+            </a>
+            <?php endforeach; ?>
+        </div>
+    </section>
+    <?php endif; ?>
+
     <!-- ── MAIN GRID ── -->
-    <main class="container">
+    <main class="container reveal">
         <div class="grid">
 
             <a class="card" href="../event/event.php">
@@ -162,41 +230,84 @@
         </div>
     </main>
 
+    <!-- ── MAP SECTION ── -->
+    <section class="home-map-section reveal">
+        <div class="home-map-inner">
+
+            <!-- Header text -->
+            <div class="home-map-header">
+                <p class="home-map-eyebrow">— Live events —</p>
+                <h2 class="home-map-title">Find events <span>on the map</span></h2>
+                <p class="home-map-sub">Discover concerts, festivals and live shows happening around the world.</p>
+            </div>
+
+            <!-- Map container -->
+            <div class="home-map-wrap">
+                <div id="home-mini-map" style="width:100%;height:360px;"></div>
+            </div>
+
+            <!-- Footer row -->
+            <div class="home-map-footer">
+                <a href="/GlobalTicket/View/map/map.php" class="home-map-cta">
+                    Explore full map
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </a>
+            </div>
+
+        </div>
+    </section>
+
     <!-- ── FOOTER ── -->
     <footer class="footer">
         <div class="footer-inner">
-            <div class="footer-logo-wrap">
-                <img src="logo.svg" alt="Global Tickets" class="logo-img">
+
+            <!-- Brand column -->
+            <div class="footer-brand">
+                <img src="logo.svg" alt="Global Tickets" class="footer-logo">
+                <p class="footer-tagline">Your world of live music.<br>Events across Europe and beyond.</p>
+                <div class="footer-socials">
+                    <a href="#" class="footer-social" aria-label="Instagram">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+                    </a>
+                    <a href="#" class="footer-social" aria-label="Twitter">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    </a>
+                    <a href="#" class="footer-social" aria-label="TikTok">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.76a4.85 4.85 0 0 1-1.01-.07z"/></svg>
+                    </a>
+                </div>
             </div>
 
+            <!-- Explore -->
             <div class="footer-col">
-                <h4>Instagram</h4>
-                <p>@globaltickets</p>
-                <h4>Email</h4>
-                <p>ticket@globaltickets</p>
-                <h4>Contact</h4>
-                <p>+30 111 111 111</p>
+                <h4 class="footer-col-title">Explore</h4>
+                <ul class="footer-links">
+                    <li><a href="/GlobalTicket/View/home/home.php">Home</a></li>
+                    <li><a href="/GlobalTicket/View/map/map.php">Events map</a></li>
+                    <li><a href="/GlobalTicket/View/login/login.php">Log in</a></li>
+                    <li><a href="/GlobalTicket/View/signIn/signin.php">Sign up</a></li>
+                </ul>
             </div>
+
+            <!-- Contact -->
             <div class="footer-col">
-                <h4>Instagram</h4>
-                <p>@globaltickets</p>
-                <h4>Email</h4>
-                <p>ticket@globaltickets</p>
-                <h4>Contact</h4>
-                <p>+30 111 111 111</p>
+                <h4 class="footer-col-title">Contact</h4>
+                <ul class="footer-links">
+                    <li><a href="#">ticket@globaltickets.com</a></li>
+                    <li><a href="#">+30 111 111 111</a></li>
+                    <li><a href="#">@globaltickets</a></li>
+                </ul>
             </div>
-            <div class="footer-col">
-                <h4>Instagram</h4>
-                <p>@globaltickets</p>
-                <h4>Email</h4>
-                <p>ticket@globaltickets</p>
-                <h4>Contact</h4>
-                <p>+30 111 111 111</p>
-            </div>
+
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Global Tickets. All rights reserved.</p>
         </div>
     </footer>
 
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
+        // ── Countdown ──
         function updateCountdown() {
             const el = document.getElementById('countdown');
             let [h, m, s] = el.textContent.split(':').map(Number);
@@ -204,6 +315,65 @@
             el.textContent = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
         }
         setInterval(updateCountdown, 1000);
+
+        // ── Mini map ──
+        const miniMap = L.map('home-mini-map', {
+            zoomControl: false,
+            attributionControl: false,
+            scrollWheelZoom: false,
+            dragging: true,
+            doubleClickZoom: false,
+            tap: false
+        }).setView([30, 10], 2);
+
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            maxZoom: 18,
+            subdomains: 'abcd'
+        }).addTo(miniMap);
+
+        const pinIcon = L.divIcon({
+            className: '',
+            html: '<div class="mini-map-pin"></div>',
+            iconSize: [14, 14],
+            iconAnchor: [7, 7],
+            popupAnchor: [0, -10]
+        });
+
+        const events = <?= $mapEventsJson ?>;
+
+        const markers = events.map(ev => {
+            const imgHtml = ev.image ? `<img src="${ev.image}" class="mini-popup-img">` : '';
+            const m = L.marker([ev.lat, ev.lng], { icon: pinIcon }).addTo(miniMap);
+            m.bindPopup(`
+                ${imgHtml}
+                <div class="mini-popup-body">
+                    <p class="mini-popup-name">${ev.name}</p>
+                    ${ev.artist ? `<p class="mini-popup-sub">${ev.artist}</p>` : ''}
+                    <p class="mini-popup-sub">${ev.date} &nbsp;·&nbsp; ${ev.location}</p>
+                    <p class="mini-popup-price">${ev.price}</p>
+                </div>
+            `, { maxWidth: 220, className: 'gt-mini-popup' });
+            return m;
+        });
+
+        if (markers.length > 0) {
+            const group = L.featureGroup(markers);
+            miniMap.fitBounds(group.getBounds().pad(0.3));
+        }
+
+        setTimeout(() => miniMap.invalidateSize(), 300);
+
+        // ── Scroll animations ──
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.08 });
+
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
     </script>
 </body>
 
