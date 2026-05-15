@@ -88,7 +88,7 @@ if (!isset($_SESSION['user_id'])) {
                     <span class="event-date">19/04/2026</span>
                     <span class="event-name">The Cyber-Shrine Session</span>
                 </div>
-                <a href="addEvent.html">
+                <a href="">
                     <button class="event-reserve-btn">Reserva ahora</button>
                 </a>
             </div>
