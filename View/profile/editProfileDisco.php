@@ -17,10 +17,8 @@ if (!isset($_SESSION['user_id'])) {
     <title>Edit profile — Global Tickets</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="/View/home/home.css">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/GlobalTicket/View/home/home.css">
     <link rel="stylesheet" href="editperfil.css">
 </head>
 
@@ -40,8 +38,7 @@ if (!isset($_SESSION['user_id'])) {
             <button class="sidebar-search-btn">
                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
                     <circle cx="7.5" cy="7.5" r="5.5" stroke="currentColor" stroke-width="2" />
-                    <line x1="11.5" y1="11.5" x2="17" y2="17" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" />
+                    <line x1="11.5" y1="11.5" x2="17" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
                 </svg>
             </button>
         </div>
@@ -55,8 +52,8 @@ if (!isset($_SESSION['user_id'])) {
     </aside>
 
     <header class="header">
-        <a href="../../home/home.php" class="logo">
-            <img src="../../home/logo.svg" alt="Global Tickets" class="logo-img">
+        <a href="/GlobalTicket/View/home/home.php" class="logo">
+            <img src="/GlobalTicket/View/home/logo.svg" alt="Global Tickets" class="logo-img">
         </a>
         <label class="menu-btn" for="sidebar-toggle">
             <svg width="22" height="16" viewBox="0 0 22 16" fill="none">
@@ -66,6 +63,9 @@ if (!isset($_SESSION['user_id'])) {
             </svg>
         </label>
     </header>
+
+    <!-- Hidden delete form (outside main form to avoid invalid nesting) -->
+    <form method="POST" action="/GlobalTicket/Controller/deleteAccount.php" id="delete-account-form"></form>
 
     <main class="edit-main">
         <div class="edit-container">
@@ -91,25 +91,13 @@ if (!isset($_SESSION['user_id'])) {
                         </div>
                         <div class="field-group">
                             <label class="field-label" for="cellphone">Cellphone</label>
-                            <input class="field-input" type="tel" id="cellphone" required pattern="[0-9+\s\-]{7,15}"
-                                placeholder=" ">
+                            <input class="field-input" type="tel" id="cellphone" required pattern="[0-9+\s\-]{7,15}" placeholder=" ">
                             <span class="field-error">Please enter a phone number</span>
                         </div>
                         <div class="field-group">
                             <label class="field-label" for="adress">Adress</label>
                             <input class="field-input" type="text" id="adress" required placeholder=" ">
                             <span class="field-error">Please enter an adress</span>
-                        </div>
-                        <div class="field-group">
-                            <label class="field-label" for="password">Password</label>
-                            <input class="field-input" type="password" id="password" required minlength="6"
-                                placeholder=" ">
-                        </div>
-                        <div class="field-group">
-                            <label class="field-label" for="confirm">Confirm password</label>
-                            <input class="field-input" type="password" id="confirm" required minlength="6"
-                                placeholder=" ">
-                            <span class="field-error">Password doesn't match</span>
                         </div>
 
                     </div>
@@ -122,16 +110,63 @@ if (!isset($_SESSION['user_id'])) {
                     </div>
                 </div>
                 <div class="edit-btns">
-                    <a href="/View/login/perfilDisco.html"
-                        <button class="edit-btn" type="submit">Confirm</button></a>
+                    <button class="edit-btn" type="submit">Confirm</button>
+                    <button type="submit" form="delete-account-form" class="edit-btn edit-btn--danger"
+                            onclick="return confirmDelete()">Delete account</button>
                 </div>
             </form>
+
+            <script>
+                function confirmDelete() {
+                    return confirm('Are you sure you want to delete your account? This action cannot be undone.');
+                }
+            </script>
+
+            <!-- Change password -->
+            <section class="pw-section">
+                <h2 class="pw-title">Change password</h2>
+
+                <?php if (isset($_GET['success'])): ?>
+                    <p class="pw-flash pw-flash--ok">Password updated successfully.</p>
+                <?php elseif (isset($_GET['error'])): ?>
+                    <?php
+                    $msgs = [
+                        'wrong_password'    => 'Current password is incorrect.',
+                        'password_mismatch' => 'New passwords do not match.',
+                        'password_short'    => 'New password must be at least 6 characters.',
+                        'missing_fields'    => 'Please fill in all fields.',
+                    ];
+                    $msg = $msgs[$_GET['error']] ?? 'An error occurred. Please try again.';
+                    ?>
+                    <p class="pw-flash pw-flash--err"><?= htmlspecialchars($msg) ?></p>
+                <?php endif; ?>
+
+                <form class="edit-form" method="POST" action="/GlobalTicket/Controller/changePassword.php">
+                    <div class="pw-fields">
+                        <div class="field-group">
+                            <label class="field-label" for="current-password">Current password</label>
+                            <input class="field-input" type="password" id="current-password" name="current-password" required minlength="6" placeholder=" ">
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label" for="new-password">New password</label>
+                            <input class="field-input" type="password" id="new-password" name="new-password" required minlength="6" placeholder=" ">
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label" for="confirm-password">Confirm new password</label>
+                            <input class="field-input" type="password" id="confirm-password" name="confirm-password" required minlength="6" placeholder=" ">
+                        </div>
+                    </div>
+                    <div class="edit-btns">
+                        <button class="edit-btn" type="submit">Change password</button>
+                    </div>
+                </form>
+            </section>
         </div>
     </main>
 
     <footer class="footer">
         <div class="footer-inner">
-            <div class="footer-logo-wrap"><img src="../../home/logo.svg" alt="Global Tickets" class="logo-img"></div>
+            <div class="footer-logo-wrap"><img src="/GlobalTicket/View/home/logo.svg" alt="Global Tickets" class="logo-img"></div>
             <div class="footer-col">
                 <h4>Instagram</h4>
                 <p>@globaltickets</p>

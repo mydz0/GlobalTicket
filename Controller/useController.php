@@ -7,7 +7,7 @@ class useController
 
     /*
      * /
-     * @var 
+     * @var
      */
 
     // Atributo privado: conexión a la BD
@@ -35,13 +35,13 @@ class useController
             exit();
         }
 
-        //vañidacion username min 3 caracteres y solo letras, numeros y underdash
+        //validacion username min 3 caracteres y solo letras, numeros y underdash
         if (!preg_match('/^[a-zA-Z0-9_]{3,}$/', $datos['username'])) {
             header("Location: registerUser.php?error=username");
             exit();
         }
 
-        //la foto: 
+        //la foto:
         if (isset($archivos['photo']) && $archivos['photo']['error'] === UPLOAD_ERR_OK) {
 
             //creamos la carpeta para las fotos:
@@ -56,15 +56,12 @@ class useController
             $rutaFinal = $directorioSubida . $nombreArchivo;
 
             if (move_uploaded_file($archivos['photo']['tmp_name'], $rutaFinal)) {
-
-                //cuando tengamos la base de datos esto lo deberiamos de cambiar, se guardaría en una variable
                 error_log("Foto subida con exito a: " . $rutaFinal);
             }
         }
 
         //insertar usuario en la base de datos
-        //crear contraseña antes de guardar
-        $passwordHash = $datos['password']; //quitar el encriptado de contraseña
+        $passwordHash = $datos['password'];
 
         //nombre de la foto (null si no hay foto)
         $foto = isset($nombreArchivo) ? $nombreArchivo : null;
@@ -79,7 +76,7 @@ class useController
         if ($stmt->execute()) {
             header("Location: .../View/home/home.php");
             exit();
-        } // Si falla (por ejemplo, email duplicado)
+        }
         if ($this->connection->errno === 1062) {
             header("Location: registerUser.php?error=email_exists");
         } else {
@@ -136,7 +133,6 @@ class useController
             header("Location: /GlobalTicket/View/signIn/discography/discoSignIn.php?error=error_registro");
             exit();
         }
-        $stmt->close();
     }
 
 
@@ -149,8 +145,8 @@ class useController
         session_start();
         if ($datos['tipo'] === 'user') {
             //buscar usuario por username
-            $stmt = $this->connection->prepare("SELECT id, username, password, role FROM users WHERE username = ? "); //and password = ? quitar para q la contraseña encriptada pueda comprobar
-            $stmt->bind_param("s", $datos['username']); //ya solo se pasa un parametro 
+            $stmt = $this->connection->prepare("SELECT id, username, password, role FROM users WHERE username = ? ");
+            $stmt->bind_param("s", $datos['username']);
             $stmt->execute();
             $usuario = $stmt->get_result()->fetch_assoc();
             $stmt->close();
@@ -162,10 +158,8 @@ class useController
                 $_SESSION['role'] = $usuario['role'];
 
                 header("Location: ../profile/perfilUser.php");
-                // header("Location: /GlobalTicket/View/profile/perfilUser.php");
                 exit();
             } else {
-
                 header("Location: ../login/login.php?error=credenciales");
                 exit();
             }
@@ -188,6 +182,106 @@ class useController
                 exit();
             }
         }
+    }
+
+    public function deleteAccount(): void
+    {
+        session_start();
+
+        if (!isset($_SESSION['user_id'])) {
+            header("Location: /GlobalTicket/View/login/login.php");
+            exit();
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header("Location: /GlobalTicket/View/home/home.php");
+            exit();
+        }
+
+        $role   = $_SESSION['role'] ?? '';
+        $tables = ['user' => 'users', 'disco' => 'discographies'];
+
+        if (!isset($tables[$role])) {
+            header("Location: /GlobalTicket/View/login/login.php");
+            exit();
+        }
+
+        $table = $tables[$role];
+        $id    = $_SESSION['user_id'];
+
+        $stmt = $this->connection->prepare("DELETE FROM $table WHERE id = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $stmt->close();
+
+        session_unset();
+        session_destroy();
+
+        header("Location: /GlobalTicket/View/home/home.php");
+        exit();
+    }
+
+    public function changePassword($datos): void
+    {
+        session_start();
+
+        if (!isset($_SESSION['user_id'])) {
+            header("Location: /GlobalTicket/View/login/login.php");
+            exit();
+        }
+
+        $role   = $_SESSION['role'] ?? '';
+        $tables = ['user' => 'users', 'disco' => 'discographies'];
+
+        if (!isset($tables[$role])) {
+            header("Location: /GlobalTicket/View/login/login.php");
+            exit();
+        }
+
+        $table    = $tables[$role];
+        $redirect = $role === 'user'
+            ? '/GlobalTicket/View/profile/editProfileUser.php'
+            : '/GlobalTicket/View/profile/editProfileDisco.php';
+
+        if (
+            empty($datos['current-password']) ||
+            empty($datos['new-password']) ||
+            empty($datos['confirm-password'])
+        ) {
+            header("Location: $redirect?error=missing_fields");
+            exit();
+        }
+
+        if ($datos['new-password'] !== $datos['confirm-password']) {
+            header("Location: $redirect?error=password_mismatch");
+            exit();
+        }
+
+        if (strlen($datos['new-password']) < 6) {
+            header("Location: $redirect?error=password_short");
+            exit();
+        }
+
+        $id   = $_SESSION['user_id'];
+        $stmt = $this->connection->prepare("SELECT password FROM $table WHERE id = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $row  = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+
+        if (!$row || !password_verify($datos['current-password'], $row['password'])) {
+            header("Location: $redirect?error=wrong_password");
+            exit();
+        }
+
+        $newHash = password_hash($datos['new-password'], PASSWORD_DEFAULT);
+        $stmt2   = $this->connection->prepare("UPDATE $table SET password = ? WHERE id = ?");
+        $stmt2->bind_param("si", $newHash, $id);
+        $stmt2->execute();
+        $stmt2->close();
+
+        header("Location: $redirect?success=1");
+        exit();
     }
 
     public function logout(): void
