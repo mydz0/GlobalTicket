@@ -74,7 +74,7 @@ class useController
         mysqli_report(MYSQLI_REPORT_OFF);
 
         if ($stmt->execute()) {
-            header("Location: .../View/home/home.php");
+            header("Location: /GlobalTicket/View/home/home.php");
             exit();
         }
         if ($this->connection->errno === 1062) {

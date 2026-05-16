@@ -201,7 +201,7 @@
 }
 
 .pw-flash--ok  { background: #e6f4ea; color: #276c3c; }
-.pw-flash--err { background: #fdecea; color: #b3261e; }
+.pw-flash--err { background: transparent; color: var(--red); font-weight: 500; }
 
 /* ══ RESPONSIVE ════════════════════════════════ */
 @media (max-width: 700px) {
