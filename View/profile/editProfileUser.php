@@ -167,7 +167,7 @@ if (!isset($_SESSION['user_id'])) {
 
     <footer class="footer">
         <div class="footer-inner">
-            <div class="footer-logo-wrap"><img src="../home/logo.svg" alt="Global Tickets" class="logo-img"></div>
+            <div class="footer-logo-wrap"><img src="/GlobalTicket/View/home/logo.svg" alt="Global Tickets" class="logo-img"></div>
             <div class="footer-col">
                 <h4>Instagram</h4>
                 <p>@globaltickets</p>
