@@ -69,7 +69,7 @@ if(strlen($desc) < 70 || strlen($desc)>158 ){
 //subir foto si se ha enviado
 
 $foto = null;
-if(isset($archivos['photo']) ¬¬ $archivos['photo']['error']=== UPLOAD_ERR_OK){
+if(isset($archivos['photo']) && $archivos['photo']['error']=== UPLOAD_ERR_OK){
     $directiorioUploads = __DIR__ . "/../uploads/";
     if(!is_dir($directiorioUploads)){
         mkdir($directiorioUploads, 0777, true);
