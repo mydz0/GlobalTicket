@@ -127,21 +127,6 @@ if (!isset($_SESSION['user_id'])) {
             <section class="pw-section">
                 <h2 class="pw-title">Change password</h2>
 
-                <?php if (isset($_GET['success'])): ?>
-                    <p class="pw-flash pw-flash--ok">Password updated successfully.</p>
-                <?php elseif (isset($_GET['error'])): ?>
-                    <?php
-                    $msgs = [
-                        'wrong_password'    => 'Current password is incorrect.',
-                        'password_mismatch' => 'New passwords do not match.',
-                        'password_short'    => 'New password must be at least 6 characters.',
-                        'missing_fields'    => 'Please fill in all fields.',
-                    ];
-                    $msg = $msgs[$_GET['error']] ?? 'An error occurred. Please try again.';
-                    ?>
-                    <p class="pw-flash pw-flash--err"><?= htmlspecialchars($msg) ?></p>
-                <?php endif; ?>
-
                 <form class="edit-form" method="POST" action="/GlobalTicket/Controller/changePassword.php">
                     <div class="pw-fields">
                         <div class="field-group">
@@ -161,6 +146,21 @@ if (!isset($_SESSION['user_id'])) {
                         <button class="edit-btn" type="submit">Change password</button>
                     </div>
                 </form>
+
+                <?php if (isset($_GET['success'])): ?>
+                    <p class="pw-flash pw-flash--ok">Password updated successfully.</p>
+                <?php elseif (isset($_GET['error'])): ?>
+                    <?php
+                    $msgs = [
+                        'wrong_password'    => 'Current password is incorrect.',
+                        'password_mismatch' => 'New passwords do not match.',
+                        'password_short'    => 'New password must be at least 6 characters.',
+                        'missing_fields'    => 'Please fill in all fields.',
+                    ];
+                    $msg = $msgs[$_GET['error']] ?? 'An error occurred. Please try again.';
+                    ?>
+                    <p class="pw-flash pw-flash--err"><?= htmlspecialchars($msg) ?></p>
+                <?php endif; ?>
             </section>
         </div>
     </main>
