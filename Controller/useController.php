@@ -182,6 +182,64 @@ class useController
         }
     }
 
+    public function changePassword($datos): void
+    {
+        session_start();
+
+        if (!isset($_SESSION['user_id'])) {
+            header("Location: /GlobalTicket/View/login/login.php");
+            exit();
+        }
+
+        $role = $_SESSION['role'] ?? '';
+        $tables = ['user' => 'users', 'disco' => 'discographies'];
+
+        if (!isset($tables[$role])) {
+            header("Location: /GlobalTicket/View/login/login.php");
+            exit();
+        }
+
+        $table    = $tables[$role];
+        $redirect = $role === 'user'
+            ? '/GlobalTicket/View/profile/editProfileUser.php'
+            : '/GlobalTicket/View/profile/editProfileDisco.php';
+
+        if (
+            empty($datos['current-password']) ||
+            empty($datos['new-password']) ||
+            empty($datos['confirm-password'])
+        ) {
+            header("Location: $redirect?error=missing_fields");
+            exit();
+        }
+
+        if ($datos['new-password'] !== $datos['confirm-password']) {
+            header("Location: $redirect?error=password_mismatch");
+            exit();
+        }
+
+        if (strlen($datos['new-password']) < 6) {
+            header("Location: $redirect?error=password_short");
+            exit();
+        }
+
+        $stmt = $this->connection->prepare("SELECT password FROM $table WHERE id = ?");
+        $stmt->execute([$_SESSION['user_id']]);
+        $row = $stmt->fetch();
+
+        if (!$row || !password_verify($datos['current-password'], $row['password'])) {
+            header("Location: $redirect?error=wrong_password");
+            exit();
+        }
+
+        $newHash = password_hash($datos['new-password'], PASSWORD_DEFAULT);
+        $stmt2   = $this->connection->prepare("UPDATE $table SET password = ? WHERE id = ?");
+        $stmt2->execute([$newHash, $_SESSION['user_id']]);
+
+        header("Location: $redirect?success=1");
+        exit();
+    }
+
     public function logout(): void
     {
         session_start();

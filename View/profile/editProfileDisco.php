@@ -100,17 +100,6 @@ if (!isset($_SESSION['user_id'])) {
                             <input class="field-input" type="text" id="adress" required placeholder=" ">
                             <span class="field-error">Please enter an adress</span>
                         </div>
-                        <div class="field-group">
-                            <label class="field-label" for="password">Password</label>
-                            <input class="field-input" type="password" id="password" required minlength="6"
-                                placeholder=" ">
-                        </div>
-                        <div class="field-group">
-                            <label class="field-label" for="confirm">Confirm password</label>
-                            <input class="field-input" type="password" id="confirm" required minlength="6"
-                                placeholder=" ">
-                            <span class="field-error">Password doesn't match</span>
-                        </div>
 
                     </div>
                     <div class="edit-photo">
@@ -122,10 +111,49 @@ if (!isset($_SESSION['user_id'])) {
                     </div>
                 </div>
                 <div class="edit-btns">
-                    <a href="/View/login/perfilDisco.html"
-                        <button class="edit-btn" type="submit">Confirm</button></a>
+                    <button class="edit-btn" type="submit">Confirm</button>
                 </div>
             </form>
+
+            <!-- Change password -->
+            <section class="pw-section">
+                <h2 class="pw-title">Change password</h2>
+
+                <?php if (isset($_GET['success'])): ?>
+                    <p class="pw-flash pw-flash--ok">Password updated successfully.</p>
+                <?php elseif (isset($_GET['error'])): ?>
+                    <?php
+                    $msgs = [
+                        'wrong_password'    => 'Current password is incorrect.',
+                        'password_mismatch' => 'New passwords do not match.',
+                        'password_short'    => 'New password must be at least 6 characters.',
+                        'missing_fields'    => 'Please fill in all fields.',
+                    ];
+                    $msg = $msgs[$_GET['error']] ?? 'An error occurred. Please try again.';
+                    ?>
+                    <p class="pw-flash pw-flash--err"><?= htmlspecialchars($msg) ?></p>
+                <?php endif; ?>
+
+                <form class="edit-form" method="POST" action="/GlobalTicket/Controller/changePassword.php">
+                    <div class="pw-fields">
+                        <div class="field-group">
+                            <label class="field-label" for="current-password">Current password</label>
+                            <input class="field-input" type="password" id="current-password" name="current-password" required minlength="6" placeholder=" ">
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label" for="new-password">New password</label>
+                            <input class="field-input" type="password" id="new-password" name="new-password" required minlength="6" placeholder=" ">
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label" for="confirm-password">Confirm new password</label>
+                            <input class="field-input" type="password" id="confirm-password" name="confirm-password" required minlength="6" placeholder=" ">
+                        </div>
+                    </div>
+                    <div class="edit-btns">
+                        <button class="edit-btn" type="submit">Change password</button>
+                    </div>
+                </form>
+            </section>
         </div>
     </main>
 
