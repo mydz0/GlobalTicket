@@ -70,7 +70,7 @@ if (!isset($_SESSION['user_id'])) {
     <main class="edit-main">
         <div class="edit-container">
             <h1 class="edit-title">Edit profile</h1>
-            <form class="edit-form" action="profile-disco.html" method="get">
+            <form class="edit-form" action="/GlobalTicket/View/profile/perfilDisco.php" method="get">
                 <div class="edit-layout">
                     <div class="edit-fields">
 

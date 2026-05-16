@@ -58,7 +58,7 @@
 
     <!-- ── HEADER ── -->
     <header class="header">
-        <a href="#" class="logo">
+        <a href="/GlobalTicket/View/home/home.php" class="logo">
             <img src="logo.svg" alt="Global Tickets" class="logo-img">
         </a>
 
