@@ -29,10 +29,8 @@ if (isset($_GET['error'])) {
 require_once '../../Model/db.php';
 $db   = Database::getInstance()->getConexion();
 $stmt = $db->prepare("SELECT name, surname, mail, cellphone, username, photo FROM users WHERE id = ?");
-$stmt->bind_param("i", $_SESSION['user_id']);
-$stmt->execute();
-$user = $stmt->get_result()->fetch_assoc();
-$stmt->close();
+$stmt->execute([$_SESSION['user_id']]);
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -163,9 +161,52 @@ $stmt->close();
                 </div>
                 <div class="edit-btns">
                     <button class="edit-btn" type="submit">Confirm</button>
-                    <a class="edit-btn edit-btn--danger" href="../home/home.php">Delete account</a>
+                    <button type="submit" form="delete-account-form" class="edit-btn edit-btn--danger"
+                            onclick="return confirm('Are you sure you want to delete your account? This action cannot be undone.')">Delete account</button>
                 </div>
             </form>
+
+            <!-- Delete form (fuera del form principal para no anidarlo) -->
+            <form method="POST" action="/GlobalTicket/Controller/deleteAccount.php" id="delete-account-form"></form>
+
+            <!-- Change password -->
+            <section class="pw-section">
+                <h2 class="pw-title">Change password</h2>
+
+                <form class="edit-form" method="POST" action="/GlobalTicket/Controller/changePassword.php">
+                    <div class="pw-fields">
+                        <div class="field-group">
+                            <label class="field-label" for="current-password">Current password</label>
+                            <input class="field-input" type="password" id="current-password" name="current-password" required minlength="6" placeholder=" ">
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label" for="new-password">New password</label>
+                            <input class="field-input" type="password" id="new-password" name="new-password" required minlength="6" placeholder=" ">
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label" for="confirm-password">Confirm new password</label>
+                            <input class="field-input" type="password" id="confirm-password" name="confirm-password" required minlength="6" placeholder=" ">
+                        </div>
+                    </div>
+                    <div class="edit-btns">
+                        <button class="edit-btn" type="submit">Change password</button>
+                    </div>
+                </form>
+
+                <?php if (isset($_GET['success'])): ?>
+                    <p class="pw-flash pw-flash--ok">Password updated successfully.</p>
+                <?php elseif (isset($_GET['error']) && in_array($_GET['error'], ['wrong_password','password_mismatch','password_short','missing_fields'])): ?>
+                    <?php
+                    $msgs = [
+                        'wrong_password'    => 'Current password is incorrect.',
+                        'password_mismatch' => 'New passwords do not match.',
+                        'password_short'    => 'New password must be at least 6 characters.',
+                        'missing_fields'    => 'Please fill in all fields.',
+                    ];
+                    ?>
+                    <p class="pw-flash pw-flash--err"><?= htmlspecialchars($msgs[$_GET['error']]) ?></p>
+                <?php endif; ?>
+            </section>
         </div>
     </main>
 

@@ -181,6 +181,166 @@ class useController
     }
 
 
+    public function updateUser($datos, $archivos): void
+    {
+        session_start();
+
+        if (!isset($_SESSION['user_id'])) {
+            header("Location: /GlobalTicket/View/login/login.php");
+            exit();
+        }
+
+        if (!filter_var($datos['mail'], FILTER_VALIDATE_EMAIL)) {
+            header("Location: /GlobalTicket/View/profile/editProfileUser.php?error=email");
+            exit();
+        }
+
+        if (!preg_match('/^[a-zA-Z0-9_]{3,}$/', $datos['username'])) {
+            header("Location: /GlobalTicket/View/profile/editProfileUser.php?error=username");
+            exit();
+        }
+
+        if (!empty($datos['password']) && $datos['password'] !== $datos['confirm-password']) {
+            header("Location: /GlobalTicket/View/profile/editProfileUser.php?error=password");
+            exit();
+        }
+
+        $foto = $this->subirFoto($archivos);
+
+        try {
+            if (!empty($datos['password'])) {
+                $passwordHash = password_hash($datos['password'], PASSWORD_DEFAULT);
+                $stmt = $this->connection->prepare(
+                    "UPDATE users SET name=:name, surname=:surname, mail=:mail, cellphone=:cellphone, username=:username, password=:password"
+                    . ($foto ? ", photo=:photo" : "") . " WHERE id=:id"
+                );
+                $params = [
+                    ':name'      => $datos['name'],
+                    ':surname'   => $datos['surname'],
+                    ':mail'      => $datos['mail'],
+                    ':cellphone' => $datos['cellphone'],
+                    ':username'  => $datos['username'],
+                    ':password'  => $passwordHash,
+                    ':id'        => $_SESSION['user_id'],
+                ];
+            } else {
+                $stmt = $this->connection->prepare(
+                    "UPDATE users SET name=:name, surname=:surname, mail=:mail, cellphone=:cellphone, username=:username"
+                    . ($foto ? ", photo=:photo" : "") . " WHERE id=:id"
+                );
+                $params = [
+                    ':name'      => $datos['name'],
+                    ':surname'   => $datos['surname'],
+                    ':mail'      => $datos['mail'],
+                    ':cellphone' => $datos['cellphone'],
+                    ':username'  => $datos['username'],
+                    ':id'        => $_SESSION['user_id'],
+                ];
+            }
+
+            if ($foto) $params[':photo'] = $foto;
+
+            $stmt->execute($params);
+            $_SESSION['username'] = $datos['username'];
+            header("Location: /GlobalTicket/View/profile/perfilUser.php");
+            exit();
+
+        } catch (PDOException $e) {
+            if ($e->getCode() === '23000') {
+                header("Location: /GlobalTicket/View/profile/editProfileUser.php?error=email_exists");
+            } else {
+                header("Location: /GlobalTicket/View/profile/editProfileUser.php?error=db_error");
+            }
+            exit();
+        }
+    }
+
+    public function deleteAccount(): void
+    {
+        session_start();
+
+        if (!isset($_SESSION['user_id'])) {
+            header("Location: /GlobalTicket/View/login/login.php");
+            exit();
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header("Location: /GlobalTicket/View/home/home.php");
+            exit();
+        }
+
+        $tables = ['user' => 'users', 'disco' => 'discographies'];
+        $role   = $_SESSION['role'] ?? '';
+
+        if (!isset($tables[$role])) {
+            header("Location: /GlobalTicket/View/login/login.php");
+            exit();
+        }
+
+        $table = $tables[$role];
+        $stmt  = $this->connection->prepare("DELETE FROM $table WHERE id = ?");
+        $stmt->execute([$_SESSION['user_id']]);
+
+        session_unset();
+        session_destroy();
+        header("Location: /GlobalTicket/View/home/home.php");
+        exit();
+    }
+
+    public function changePassword($datos): void
+    {
+        session_start();
+
+        if (!isset($_SESSION['user_id'])) {
+            header("Location: /GlobalTicket/View/login/login.php");
+            exit();
+        }
+
+        $tables   = ['user' => 'users', 'disco' => 'discographies'];
+        $role     = $_SESSION['role'] ?? '';
+
+        if (!isset($tables[$role])) {
+            header("Location: /GlobalTicket/View/login/login.php");
+            exit();
+        }
+
+        $table    = $tables[$role];
+        $redirect = $role === 'user'
+            ? '/GlobalTicket/View/profile/editProfileUser.php'
+            : '/GlobalTicket/View/profile/editProfileDisco.php';
+
+        if (empty($datos['current-password']) || empty($datos['new-password']) || empty($datos['confirm-password'])) {
+            header("Location: $redirect?error=missing_fields");
+            exit();
+        }
+
+        if ($datos['new-password'] !== $datos['confirm-password']) {
+            header("Location: $redirect?error=password_mismatch");
+            exit();
+        }
+
+        if (strlen($datos['new-password']) < 6) {
+            header("Location: $redirect?error=password_short");
+            exit();
+        }
+
+        $stmt = $this->connection->prepare("SELECT password FROM $table WHERE id = ?");
+        $stmt->execute([$_SESSION['user_id']]);
+        $row  = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$row || !password_verify($datos['current-password'], $row['password'])) {
+            header("Location: $redirect?error=wrong_password");
+            exit();
+        }
+
+        $newHash = password_hash($datos['new-password'], PASSWORD_DEFAULT);
+        $stmt2   = $this->connection->prepare("UPDATE $table SET password = ? WHERE id = ?");
+        $stmt2->execute([$newHash, $_SESSION['user_id']]);
+
+        header("Location: $redirect?success=1");
+        exit();
+    }
+
     public function logout(): void
     {
         session_start();
